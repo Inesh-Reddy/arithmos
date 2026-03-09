@@ -1,34 +1,5 @@
 # Turborepo starter
 
-finance-ai/
-│
-├── apps/
-│ ├── web
-│ ├── api
-│ ├── ingestion-worker
-│ ├── transform-worker
-│ ├── ai-agent
-│ ├── llm-gateway
-│
-├── packages/
-│ ├── db
-│ ├── auth
-│ ├── kafka
-│ ├── logger
-│ ├── validation
-│ ├── sql-guard
-│ ├── rag
-│ ├── prompts
-│ ├── types
-│
-├── infra/
-│ ├── terraform
-│ ├── k8s
-│
-└── docker/
-
-This Turborepo starter is maintained by the Turborepo core team.
-
 ## Using this example
 
 Run the following command:
