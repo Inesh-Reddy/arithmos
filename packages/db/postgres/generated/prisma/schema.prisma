@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id    String  @id @default(uuid())
+  email String  @unique
+  name  String?
+
+  passwordHash String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workspaces Workspace[]
+}
+
+model Workspace {
+  id          String   @id @default(uuid())
+  name        String
+  ownerUserId String
+  owner       User     @relation(fields: [ownerUserId], references: [id])
+  createdAt   DateTime @default(now())
+
+  connections Connection[]
+}
+
+model Integration {
+  id                        String @id @default(uuid())
+  name                      String @unique
+  authType                  String
+  airbyteSourceDefinitionId String
+
+  connections Connection[]
+}
+
+model Connection {
+  id   String @id @default(uuid())
+  name String
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  integrationId String
+  integration   Integration @relation(fields: [integrationId], references: [id])
+
+  accessToken  String
+  refreshToken String?
+  expiresAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organizations Organization[]
+}
+
+model Organization {
+  id String @id @default(uuid())
+
+  connectionId String
+  connection   Connection @relation(fields: [connectionId], references: [id])
+
+  externalOrgId String
+  name          String
+  metadata      Json?
+
+  pipelines Pipeline[]
+}
+
+model Pipeline {
+  id String @id @default(uuid())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  airbyteConnectionId String
+
+  status   String
+  lastSync DateTime?
+
+  createdAt DateTime @default(now())
+}
