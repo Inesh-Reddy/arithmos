@@ -9,9 +9,10 @@ import { OrganisationModule } from './organisation/organisation.module';
 import { DataPipelineModule } from './data-pipeline/data-pipeline.module';
 import { AirbyteModule } from './airbyte/airbyte.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UserModule, WorkspaceModule, IntegrationModule, ConnectionModule, OrganisationModule, DataPipelineModule, AirbyteModule, AnalyticsModule],
+  imports: [UserModule, WorkspaceModule, IntegrationModule, ConnectionModule, OrganisationModule, DataPipelineModule, AirbyteModule, AnalyticsModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -12,12 +12,16 @@ datasource db {
   provider = "postgresql"
 }
 
+// =======================
+// USER & AUTH
+// =======================
+
 model User {
   id    String  @id @default(uuid())
   email String  @unique
   name  String?
 
-  passwordHash String?
+  passwordHash String? // optional for OAuth users
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -25,24 +29,45 @@ model User {
   workspaces Workspace[]
 }
 
-model Workspace {
-  id          String   @id @default(uuid())
-  name        String
-  ownerUserId String
-  owner       User     @relation(fields: [ownerUserId], references: [id])
-  createdAt   DateTime @default(now())
+// =======================
+// WORKSPACE (TENANT)
+// =======================
 
-  connections Connection[]
+model Workspace {
+  id   String @id @default(uuid())
+  name String
+
+  ownerUserId String
+  owner       User   @relation(fields: [ownerUserId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  connections   Connection[]
+  organizations Organization[]
+  pipelines     Pipeline[]
+
+  @@index([ownerUserId])
 }
+
+// =======================
+// INTEGRATION (GLOBAL)
+// =======================
 
 model Integration {
-  id                        String @id @default(uuid())
-  name                      String @unique
-  authType                  String
+  id       String @id @default(uuid())
+  name     String @unique // Xero, Quickbooks, etc
+  authType String // oauth2, api_key
+
   airbyteSourceDefinitionId String
+
+  createdAt DateTime @default(now())
 
   connections Connection[]
 }
+
+// =======================
+// CONNECTION (OAUTH)
+// =======================
 
 model Connection {
   id   String @id @default(uuid())
@@ -54,7 +79,7 @@ model Connection {
   integrationId String
   integration   Integration @relation(fields: [integrationId], references: [id])
 
-  accessToken  String
+  accessToken  String // encrypt in production
   refreshToken String?
   expiresAt    DateTime?
 
@@ -62,7 +87,14 @@ model Connection {
   updatedAt DateTime @updatedAt
 
   organizations Organization[]
+
+  @@index([workspaceId])
+  @@index([integrationId])
 }
+
+// =======================
+// ORGANIZATION (FROM SaaS)
+// =======================
 
 model Organization {
   id String @id @default(uuid())
@@ -70,12 +102,25 @@ model Organization {
   connectionId String
   connection   Connection @relation(fields: [connectionId], references: [id])
 
-  externalOrgId String
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  externalOrgId String // ID from Xero, Quickbooks, etc
   name          String
   metadata      Json?
 
+  createdAt DateTime @default(now())
+
   pipelines Pipeline[]
+
+  // Prevent duplicate orgs per connection
+  @@unique([connectionId, externalOrgId])
+  @@index([workspaceId])
 }
+
+// =======================
+// PIPELINE (AIRBYTE SYNC)
+// =======================
 
 model Pipeline {
   id String @id @default(uuid())
@@ -83,10 +128,57 @@ model Pipeline {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  airbyteConnectionId String
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
 
-  status   String
+  airbyteConnectionId String // Airbyte connection ID
+
+  status   PipelineStatus
   lastSync DateTime?
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  runs PipelineRun[]
+
+  @@unique([organizationId])
+  @@index([workspaceId])
+}
+
+// =======================
+// PIPELINE RUNS (OBSERVABILITY)
+// =======================
+
+model PipelineRun {
+  id String @id @default(uuid())
+
+  pipelineId String
+  pipeline   Pipeline @relation(fields: [pipelineId], references: [id])
+
+  status PipelineRunStatus
+
+  startedAt  DateTime
+  finishedAt DateTime?
+
+  error String?
+
+  createdAt DateTime @default(now())
+
+  @@index([pipelineId])
+}
+
+// =======================
+// ENUMS
+// =======================
+
+enum PipelineStatus {
+  ACTIVE
+  PAUSED
+  FAILED
+}
+
+enum PipelineRunStatus {
+  RUNNING
+  SUCCESS
+  FAILED
 }

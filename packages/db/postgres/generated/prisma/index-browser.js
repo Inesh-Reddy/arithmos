@@ -140,7 +140,8 @@ exports.Prisma.IntegrationScalarFieldEnum = {
   id: 'id',
   name: 'name',
   authType: 'authType',
-  airbyteSourceDefinitionId: 'airbyteSourceDefinitionId'
+  airbyteSourceDefinitionId: 'airbyteSourceDefinitionId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ConnectionScalarFieldEnum = {
@@ -158,17 +159,31 @@ exports.Prisma.ConnectionScalarFieldEnum = {
 exports.Prisma.OrganizationScalarFieldEnum = {
   id: 'id',
   connectionId: 'connectionId',
+  workspaceId: 'workspaceId',
   externalOrgId: 'externalOrgId',
   name: 'name',
-  metadata: 'metadata'
+  metadata: 'metadata',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.PipelineScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  workspaceId: 'workspaceId',
   airbyteConnectionId: 'airbyteConnectionId',
   status: 'status',
   lastSync: 'lastSync',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PipelineRunScalarFieldEnum = {
+  id: 'id',
+  pipelineId: 'pipelineId',
+  status: 'status',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  error: 'error',
   createdAt: 'createdAt'
 };
 
@@ -197,7 +212,17 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.PipelineStatus = exports.$Enums.PipelineStatus = {
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  FAILED: 'FAILED'
+};
 
+exports.PipelineRunStatus = exports.$Enums.PipelineRunStatus = {
+  RUNNING: 'RUNNING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -205,7 +230,8 @@ exports.Prisma.ModelName = {
   Integration: 'Integration',
   Connection: 'Connection',
   Organization: 'Organization',
-  Pipeline: 'Pipeline'
+  Pipeline: 'Pipeline',
+  PipelineRun: 'PipelineRun'
 };
 
 /**

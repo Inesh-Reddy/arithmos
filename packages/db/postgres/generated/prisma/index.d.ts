@@ -43,6 +43,42 @@ export type Organization = $Result.DefaultSelection<Prisma.$OrganizationPayload>
  * 
  */
 export type Pipeline = $Result.DefaultSelection<Prisma.$PipelinePayload>
+/**
+ * Model PipelineRun
+ * 
+ */
+export type PipelineRun = $Result.DefaultSelection<Prisma.$PipelineRunPayload>
+
+/**
+ * Enums
+ */
+export namespace $Enums {
+  export const PipelineStatus: {
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  FAILED: 'FAILED'
+};
+
+export type PipelineStatus = (typeof PipelineStatus)[keyof typeof PipelineStatus]
+
+
+export const PipelineRunStatus: {
+  RUNNING: 'RUNNING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
+};
+
+export type PipelineRunStatus = (typeof PipelineRunStatus)[keyof typeof PipelineRunStatus]
+
+}
+
+export type PipelineStatus = $Enums.PipelineStatus
+
+export const PipelineStatus: typeof $Enums.PipelineStatus
+
+export type PipelineRunStatus = $Enums.PipelineRunStatus
+
+export const PipelineRunStatus: typeof $Enums.PipelineRunStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -224,6 +260,16 @@ export class PrismaClient<
     * ```
     */
   get pipeline(): Prisma.PipelineDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pipelineRun`: Exposes CRUD operations for the **PipelineRun** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PipelineRuns
+    * const pipelineRuns = await prisma.pipelineRun.findMany()
+    * ```
+    */
+  get pipelineRun(): Prisma.PipelineRunDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -663,7 +709,8 @@ export namespace Prisma {
     Integration: 'Integration',
     Connection: 'Connection',
     Organization: 'Organization',
-    Pipeline: 'Pipeline'
+    Pipeline: 'Pipeline',
+    PipelineRun: 'PipelineRun'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -679,7 +726,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "workspace" | "integration" | "connection" | "organization" | "pipeline"
+      modelProps: "user" | "workspace" | "integration" | "connection" | "organization" | "pipeline" | "pipelineRun"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1127,6 +1174,80 @@ export namespace Prisma {
           }
         }
       }
+      PipelineRun: {
+        payload: Prisma.$PipelineRunPayload<ExtArgs>
+        fields: Prisma.PipelineRunFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PipelineRunFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PipelineRunFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload>
+          }
+          findFirst: {
+            args: Prisma.PipelineRunFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PipelineRunFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload>
+          }
+          findMany: {
+            args: Prisma.PipelineRunFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload>[]
+          }
+          create: {
+            args: Prisma.PipelineRunCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload>
+          }
+          createMany: {
+            args: Prisma.PipelineRunCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PipelineRunCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload>[]
+          }
+          delete: {
+            args: Prisma.PipelineRunDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload>
+          }
+          update: {
+            args: Prisma.PipelineRunUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload>
+          }
+          deleteMany: {
+            args: Prisma.PipelineRunDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PipelineRunUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PipelineRunUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload>[]
+          }
+          upsert: {
+            args: Prisma.PipelineRunUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineRunPayload>
+          }
+          aggregate: {
+            args: Prisma.PipelineRunAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePipelineRun>
+          }
+          groupBy: {
+            args: Prisma.PipelineRunGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PipelineRunGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PipelineRunCountArgs<ExtArgs>
+            result: $Utils.Optional<PipelineRunCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1241,6 +1362,7 @@ export namespace Prisma {
     connection?: ConnectionOmit
     organization?: OrganizationOmit
     pipeline?: PipelineOmit
+    pipelineRun?: PipelineRunOmit
   }
 
   /* Types for Logging */
@@ -1353,10 +1475,14 @@ export namespace Prisma {
 
   export type WorkspaceCountOutputType = {
     connections: number
+    organizations: number
+    pipelines: number
   }
 
   export type WorkspaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     connections?: boolean | WorkspaceCountOutputTypeCountConnectionsArgs
+    organizations?: boolean | WorkspaceCountOutputTypeCountOrganizationsArgs
+    pipelines?: boolean | WorkspaceCountOutputTypeCountPipelinesArgs
   }
 
   // Custom InputTypes
@@ -1375,6 +1501,20 @@ export namespace Prisma {
    */
   export type WorkspaceCountOutputTypeCountConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ConnectionWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountOrganizationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrganizationWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountPipelinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipelineWhereInput
   }
 
 
@@ -1468,6 +1608,37 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountPipelinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PipelineWhereInput
+  }
+
+
+  /**
+   * Count Type PipelineCountOutputType
+   */
+
+  export type PipelineCountOutputType = {
+    runs: number
+  }
+
+  export type PipelineCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    runs?: boolean | PipelineCountOutputTypeCountRunsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PipelineCountOutputType without action
+   */
+  export type PipelineCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineCountOutputType
+     */
+    select?: PipelineCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PipelineCountOutputType without action
+   */
+  export type PipelineCountOutputTypeCountRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipelineRunWhereInput
   }
 
 
@@ -2721,6 +2892,8 @@ export namespace Prisma {
     createdAt?: boolean
     owner?: boolean | UserDefaultArgs<ExtArgs>
     connections?: boolean | Workspace$connectionsArgs<ExtArgs>
+    organizations?: boolean | Workspace$organizationsArgs<ExtArgs>
+    pipelines?: boolean | Workspace$pipelinesArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workspace"]>
 
@@ -2751,6 +2924,8 @@ export namespace Prisma {
   export type WorkspaceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | UserDefaultArgs<ExtArgs>
     connections?: boolean | Workspace$connectionsArgs<ExtArgs>
+    organizations?: boolean | Workspace$organizationsArgs<ExtArgs>
+    pipelines?: boolean | Workspace$pipelinesArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2765,6 +2940,8 @@ export namespace Prisma {
     objects: {
       owner: Prisma.$UserPayload<ExtArgs>
       connections: Prisma.$ConnectionPayload<ExtArgs>[]
+      organizations: Prisma.$OrganizationPayload<ExtArgs>[]
+      pipelines: Prisma.$PipelinePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3167,6 +3344,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     connections<T extends Workspace$connectionsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$connectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    organizations<T extends Workspace$organizationsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$organizationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pipelines<T extends Workspace$pipelinesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$pipelinesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3625,6 +3804,54 @@ export namespace Prisma {
   }
 
   /**
+   * Workspace.organizations
+   */
+  export type Workspace$organizationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    where?: OrganizationWhereInput
+    orderBy?: OrganizationOrderByWithRelationInput | OrganizationOrderByWithRelationInput[]
+    cursor?: OrganizationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrganizationScalarFieldEnum | OrganizationScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.pipelines
+   */
+  export type Workspace$pipelinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pipeline
+     */
+    select?: PipelineSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pipeline
+     */
+    omit?: PipelineOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineInclude<ExtArgs> | null
+    where?: PipelineWhereInput
+    orderBy?: PipelineOrderByWithRelationInput | PipelineOrderByWithRelationInput[]
+    cursor?: PipelineWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PipelineScalarFieldEnum | PipelineScalarFieldEnum[]
+  }
+
+  /**
    * Workspace without action
    */
   export type WorkspaceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3658,6 +3885,7 @@ export namespace Prisma {
     name: string | null
     authType: string | null
     airbyteSourceDefinitionId: string | null
+    createdAt: Date | null
   }
 
   export type IntegrationMaxAggregateOutputType = {
@@ -3665,6 +3893,7 @@ export namespace Prisma {
     name: string | null
     authType: string | null
     airbyteSourceDefinitionId: string | null
+    createdAt: Date | null
   }
 
   export type IntegrationCountAggregateOutputType = {
@@ -3672,6 +3901,7 @@ export namespace Prisma {
     name: number
     authType: number
     airbyteSourceDefinitionId: number
+    createdAt: number
     _all: number
   }
 
@@ -3681,6 +3911,7 @@ export namespace Prisma {
     name?: true
     authType?: true
     airbyteSourceDefinitionId?: true
+    createdAt?: true
   }
 
   export type IntegrationMaxAggregateInputType = {
@@ -3688,6 +3919,7 @@ export namespace Prisma {
     name?: true
     authType?: true
     airbyteSourceDefinitionId?: true
+    createdAt?: true
   }
 
   export type IntegrationCountAggregateInputType = {
@@ -3695,6 +3927,7 @@ export namespace Prisma {
     name?: true
     authType?: true
     airbyteSourceDefinitionId?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -3775,6 +4008,7 @@ export namespace Prisma {
     name: string
     authType: string
     airbyteSourceDefinitionId: string
+    createdAt: Date
     _count: IntegrationCountAggregateOutputType | null
     _min: IntegrationMinAggregateOutputType | null
     _max: IntegrationMaxAggregateOutputType | null
@@ -3799,6 +4033,7 @@ export namespace Prisma {
     name?: boolean
     authType?: boolean
     airbyteSourceDefinitionId?: boolean
+    createdAt?: boolean
     connections?: boolean | Integration$connectionsArgs<ExtArgs>
     _count?: boolean | IntegrationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["integration"]>
@@ -3808,6 +4043,7 @@ export namespace Prisma {
     name?: boolean
     authType?: boolean
     airbyteSourceDefinitionId?: boolean
+    createdAt?: boolean
   }, ExtArgs["result"]["integration"]>
 
   export type IntegrationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3815,6 +4051,7 @@ export namespace Prisma {
     name?: boolean
     authType?: boolean
     airbyteSourceDefinitionId?: boolean
+    createdAt?: boolean
   }, ExtArgs["result"]["integration"]>
 
   export type IntegrationSelectScalar = {
@@ -3822,9 +4059,10 @@ export namespace Prisma {
     name?: boolean
     authType?: boolean
     airbyteSourceDefinitionId?: boolean
+    createdAt?: boolean
   }
 
-  export type IntegrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "authType" | "airbyteSourceDefinitionId", ExtArgs["result"]["integration"]>
+  export type IntegrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "authType" | "airbyteSourceDefinitionId" | "createdAt", ExtArgs["result"]["integration"]>
   export type IntegrationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     connections?: boolean | Integration$connectionsArgs<ExtArgs>
     _count?: boolean | IntegrationCountOutputTypeDefaultArgs<ExtArgs>
@@ -3842,6 +4080,7 @@ export namespace Prisma {
       name: string
       authType: string
       airbyteSourceDefinitionId: string
+      createdAt: Date
     }, ExtArgs["result"]["integration"]>
     composites: {}
   }
@@ -4270,6 +4509,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Integration", 'String'>
     readonly authType: FieldRef<"Integration", 'String'>
     readonly airbyteSourceDefinitionId: FieldRef<"Integration", 'String'>
+    readonly createdAt: FieldRef<"Integration", 'DateTime'>
   }
     
 
@@ -5871,23 +6111,29 @@ export namespace Prisma {
   export type OrganizationMinAggregateOutputType = {
     id: string | null
     connectionId: string | null
+    workspaceId: string | null
     externalOrgId: string | null
     name: string | null
+    createdAt: Date | null
   }
 
   export type OrganizationMaxAggregateOutputType = {
     id: string | null
     connectionId: string | null
+    workspaceId: string | null
     externalOrgId: string | null
     name: string | null
+    createdAt: Date | null
   }
 
   export type OrganizationCountAggregateOutputType = {
     id: number
     connectionId: number
+    workspaceId: number
     externalOrgId: number
     name: number
     metadata: number
+    createdAt: number
     _all: number
   }
 
@@ -5895,23 +6141,29 @@ export namespace Prisma {
   export type OrganizationMinAggregateInputType = {
     id?: true
     connectionId?: true
+    workspaceId?: true
     externalOrgId?: true
     name?: true
+    createdAt?: true
   }
 
   export type OrganizationMaxAggregateInputType = {
     id?: true
     connectionId?: true
+    workspaceId?: true
     externalOrgId?: true
     name?: true
+    createdAt?: true
   }
 
   export type OrganizationCountAggregateInputType = {
     id?: true
     connectionId?: true
+    workspaceId?: true
     externalOrgId?: true
     name?: true
     metadata?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -5990,9 +6242,11 @@ export namespace Prisma {
   export type OrganizationGroupByOutputType = {
     id: string
     connectionId: string
+    workspaceId: string
     externalOrgId: string
     name: string
     metadata: JsonValue | null
+    createdAt: Date
     _count: OrganizationCountAggregateOutputType | null
     _min: OrganizationMinAggregateOutputType | null
     _max: OrganizationMaxAggregateOutputType | null
@@ -6015,10 +6269,13 @@ export namespace Prisma {
   export type OrganizationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     connectionId?: boolean
+    workspaceId?: boolean
     externalOrgId?: boolean
     name?: boolean
     metadata?: boolean
+    createdAt?: boolean
     connection?: boolean | ConnectionDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     pipelines?: boolean | Organization$pipelinesArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
@@ -6026,54 +6283,68 @@ export namespace Prisma {
   export type OrganizationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     connectionId?: boolean
+    workspaceId?: boolean
     externalOrgId?: boolean
     name?: boolean
     metadata?: boolean
+    createdAt?: boolean
     connection?: boolean | ConnectionDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
   export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     connectionId?: boolean
+    workspaceId?: boolean
     externalOrgId?: boolean
     name?: boolean
     metadata?: boolean
+    createdAt?: boolean
     connection?: boolean | ConnectionDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
   export type OrganizationSelectScalar = {
     id?: boolean
     connectionId?: boolean
+    workspaceId?: boolean
     externalOrgId?: boolean
     name?: boolean
     metadata?: boolean
+    createdAt?: boolean
   }
 
-  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "connectionId" | "externalOrgId" | "name" | "metadata", ExtArgs["result"]["organization"]>
+  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "connectionId" | "workspaceId" | "externalOrgId" | "name" | "metadata" | "createdAt", ExtArgs["result"]["organization"]>
   export type OrganizationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     connection?: boolean | ConnectionDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     pipelines?: boolean | Organization$pipelinesArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     connection?: boolean | ConnectionDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     connection?: boolean | ConnectionDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }
 
   export type $OrganizationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Organization"
     objects: {
       connection: Prisma.$ConnectionPayload<ExtArgs>
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
       pipelines: Prisma.$PipelinePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       connectionId: string
+      workspaceId: string
       externalOrgId: string
       name: string
       metadata: Prisma.JsonValue | null
+      createdAt: Date
     }, ExtArgs["result"]["organization"]>
     composites: {}
   }
@@ -6469,6 +6740,7 @@ export namespace Prisma {
   export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     connection<T extends ConnectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ConnectionDefaultArgs<ExtArgs>>): Prisma__ConnectionClient<$Result.GetResult<Prisma.$ConnectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     pipelines<T extends Organization$pipelinesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$pipelinesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -6501,9 +6773,11 @@ export namespace Prisma {
   interface OrganizationFieldRefs {
     readonly id: FieldRef<"Organization", 'String'>
     readonly connectionId: FieldRef<"Organization", 'String'>
+    readonly workspaceId: FieldRef<"Organization", 'String'>
     readonly externalOrgId: FieldRef<"Organization", 'String'>
     readonly name: FieldRef<"Organization", 'String'>
     readonly metadata: FieldRef<"Organization", 'Json'>
+    readonly createdAt: FieldRef<"Organization", 'DateTime'>
   }
     
 
@@ -6960,28 +7234,34 @@ export namespace Prisma {
   export type PipelineMinAggregateOutputType = {
     id: string | null
     organizationId: string | null
+    workspaceId: string | null
     airbyteConnectionId: string | null
-    status: string | null
+    status: $Enums.PipelineStatus | null
     lastSync: Date | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type PipelineMaxAggregateOutputType = {
     id: string | null
     organizationId: string | null
+    workspaceId: string | null
     airbyteConnectionId: string | null
-    status: string | null
+    status: $Enums.PipelineStatus | null
     lastSync: Date | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type PipelineCountAggregateOutputType = {
     id: number
     organizationId: number
+    workspaceId: number
     airbyteConnectionId: number
     status: number
     lastSync: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -6989,28 +7269,34 @@ export namespace Prisma {
   export type PipelineMinAggregateInputType = {
     id?: true
     organizationId?: true
+    workspaceId?: true
     airbyteConnectionId?: true
     status?: true
     lastSync?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type PipelineMaxAggregateInputType = {
     id?: true
     organizationId?: true
+    workspaceId?: true
     airbyteConnectionId?: true
     status?: true
     lastSync?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type PipelineCountAggregateInputType = {
     id?: true
     organizationId?: true
+    workspaceId?: true
     airbyteConnectionId?: true
     status?: true
     lastSync?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -7089,10 +7375,12 @@ export namespace Prisma {
   export type PipelineGroupByOutputType = {
     id: string
     organizationId: string
+    workspaceId: string
     airbyteConnectionId: string
-    status: string
+    status: $Enums.PipelineStatus
     lastSync: Date | null
     createdAt: Date
+    updatedAt: Date
     _count: PipelineCountAggregateOutputType | null
     _min: PipelineMinAggregateOutputType | null
     _max: PipelineMaxAggregateOutputType | null
@@ -7115,65 +7403,87 @@ export namespace Prisma {
   export type PipelineSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
+    workspaceId?: boolean
     airbyteConnectionId?: boolean
     status?: boolean
     lastSync?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    runs?: boolean | Pipeline$runsArgs<ExtArgs>
+    _count?: boolean | PipelineCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pipeline"]>
 
   export type PipelineSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
+    workspaceId?: boolean
     airbyteConnectionId?: boolean
     status?: boolean
     lastSync?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pipeline"]>
 
   export type PipelineSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
+    workspaceId?: boolean
     airbyteConnectionId?: boolean
     status?: boolean
     lastSync?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pipeline"]>
 
   export type PipelineSelectScalar = {
     id?: boolean
     organizationId?: boolean
+    workspaceId?: boolean
     airbyteConnectionId?: boolean
     status?: boolean
     lastSync?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type PipelineOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "airbyteConnectionId" | "status" | "lastSync" | "createdAt", ExtArgs["result"]["pipeline"]>
+  export type PipelineOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "workspaceId" | "airbyteConnectionId" | "status" | "lastSync" | "createdAt" | "updatedAt", ExtArgs["result"]["pipeline"]>
   export type PipelineInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    runs?: boolean | Pipeline$runsArgs<ExtArgs>
+    _count?: boolean | PipelineCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PipelineIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }
   export type PipelineIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }
 
   export type $PipelinePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Pipeline"
     objects: {
       organization: Prisma.$OrganizationPayload<ExtArgs>
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+      runs: Prisma.$PipelineRunPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       organizationId: string
+      workspaceId: string
       airbyteConnectionId: string
-      status: string
+      status: $Enums.PipelineStatus
       lastSync: Date | null
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["pipeline"]>
     composites: {}
   }
@@ -7569,6 +7879,8 @@ export namespace Prisma {
   export interface Prisma__PipelineClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    runs<T extends Pipeline$runsArgs<ExtArgs> = {}>(args?: Subset<T, Pipeline$runsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7600,10 +7912,12 @@ export namespace Prisma {
   interface PipelineFieldRefs {
     readonly id: FieldRef<"Pipeline", 'String'>
     readonly organizationId: FieldRef<"Pipeline", 'String'>
+    readonly workspaceId: FieldRef<"Pipeline", 'String'>
     readonly airbyteConnectionId: FieldRef<"Pipeline", 'String'>
-    readonly status: FieldRef<"Pipeline", 'String'>
+    readonly status: FieldRef<"Pipeline", 'PipelineStatus'>
     readonly lastSync: FieldRef<"Pipeline", 'DateTime'>
     readonly createdAt: FieldRef<"Pipeline", 'DateTime'>
+    readonly updatedAt: FieldRef<"Pipeline", 'DateTime'>
   }
     
 
@@ -8005,6 +8319,30 @@ export namespace Prisma {
   }
 
   /**
+   * Pipeline.runs
+   */
+  export type Pipeline$runsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    where?: PipelineRunWhereInput
+    orderBy?: PipelineRunOrderByWithRelationInput | PipelineRunOrderByWithRelationInput[]
+    cursor?: PipelineRunWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PipelineRunScalarFieldEnum | PipelineRunScalarFieldEnum[]
+  }
+
+  /**
    * Pipeline without action
    */
   export type PipelineDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8020,6 +8358,1095 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PipelineInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PipelineRun
+   */
+
+  export type AggregatePipelineRun = {
+    _count: PipelineRunCountAggregateOutputType | null
+    _min: PipelineRunMinAggregateOutputType | null
+    _max: PipelineRunMaxAggregateOutputType | null
+  }
+
+  export type PipelineRunMinAggregateOutputType = {
+    id: string | null
+    pipelineId: string | null
+    status: $Enums.PipelineRunStatus | null
+    startedAt: Date | null
+    finishedAt: Date | null
+    error: string | null
+    createdAt: Date | null
+  }
+
+  export type PipelineRunMaxAggregateOutputType = {
+    id: string | null
+    pipelineId: string | null
+    status: $Enums.PipelineRunStatus | null
+    startedAt: Date | null
+    finishedAt: Date | null
+    error: string | null
+    createdAt: Date | null
+  }
+
+  export type PipelineRunCountAggregateOutputType = {
+    id: number
+    pipelineId: number
+    status: number
+    startedAt: number
+    finishedAt: number
+    error: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PipelineRunMinAggregateInputType = {
+    id?: true
+    pipelineId?: true
+    status?: true
+    startedAt?: true
+    finishedAt?: true
+    error?: true
+    createdAt?: true
+  }
+
+  export type PipelineRunMaxAggregateInputType = {
+    id?: true
+    pipelineId?: true
+    status?: true
+    startedAt?: true
+    finishedAt?: true
+    error?: true
+    createdAt?: true
+  }
+
+  export type PipelineRunCountAggregateInputType = {
+    id?: true
+    pipelineId?: true
+    status?: true
+    startedAt?: true
+    finishedAt?: true
+    error?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PipelineRunAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelineRun to aggregate.
+     */
+    where?: PipelineRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineRuns to fetch.
+     */
+    orderBy?: PipelineRunOrderByWithRelationInput | PipelineRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PipelineRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PipelineRuns
+    **/
+    _count?: true | PipelineRunCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PipelineRunMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PipelineRunMaxAggregateInputType
+  }
+
+  export type GetPipelineRunAggregateType<T extends PipelineRunAggregateArgs> = {
+        [P in keyof T & keyof AggregatePipelineRun]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePipelineRun[P]>
+      : GetScalarType<T[P], AggregatePipelineRun[P]>
+  }
+
+
+
+
+  export type PipelineRunGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipelineRunWhereInput
+    orderBy?: PipelineRunOrderByWithAggregationInput | PipelineRunOrderByWithAggregationInput[]
+    by: PipelineRunScalarFieldEnum[] | PipelineRunScalarFieldEnum
+    having?: PipelineRunScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PipelineRunCountAggregateInputType | true
+    _min?: PipelineRunMinAggregateInputType
+    _max?: PipelineRunMaxAggregateInputType
+  }
+
+  export type PipelineRunGroupByOutputType = {
+    id: string
+    pipelineId: string
+    status: $Enums.PipelineRunStatus
+    startedAt: Date
+    finishedAt: Date | null
+    error: string | null
+    createdAt: Date
+    _count: PipelineRunCountAggregateOutputType | null
+    _min: PipelineRunMinAggregateOutputType | null
+    _max: PipelineRunMaxAggregateOutputType | null
+  }
+
+  type GetPipelineRunGroupByPayload<T extends PipelineRunGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PipelineRunGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PipelineRunGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PipelineRunGroupByOutputType[P]>
+            : GetScalarType<T[P], PipelineRunGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PipelineRunSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pipelineId?: boolean
+    status?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+    pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pipelineRun"]>
+
+  export type PipelineRunSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pipelineId?: boolean
+    status?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+    pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pipelineRun"]>
+
+  export type PipelineRunSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pipelineId?: boolean
+    status?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+    pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pipelineRun"]>
+
+  export type PipelineRunSelectScalar = {
+    id?: boolean
+    pipelineId?: boolean
+    status?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+  }
+
+  export type PipelineRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "pipelineId" | "status" | "startedAt" | "finishedAt" | "error" | "createdAt", ExtArgs["result"]["pipelineRun"]>
+  export type PipelineRunInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
+  }
+  export type PipelineRunIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
+  }
+  export type PipelineRunIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pipeline?: boolean | PipelineDefaultArgs<ExtArgs>
+  }
+
+  export type $PipelineRunPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PipelineRun"
+    objects: {
+      pipeline: Prisma.$PipelinePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      pipelineId: string
+      status: $Enums.PipelineRunStatus
+      startedAt: Date
+      finishedAt: Date | null
+      error: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["pipelineRun"]>
+    composites: {}
+  }
+
+  type PipelineRunGetPayload<S extends boolean | null | undefined | PipelineRunDefaultArgs> = $Result.GetResult<Prisma.$PipelineRunPayload, S>
+
+  type PipelineRunCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PipelineRunFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PipelineRunCountAggregateInputType | true
+    }
+
+  export interface PipelineRunDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PipelineRun'], meta: { name: 'PipelineRun' } }
+    /**
+     * Find zero or one PipelineRun that matches the filter.
+     * @param {PipelineRunFindUniqueArgs} args - Arguments to find a PipelineRun
+     * @example
+     * // Get one PipelineRun
+     * const pipelineRun = await prisma.pipelineRun.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PipelineRunFindUniqueArgs>(args: SelectSubset<T, PipelineRunFindUniqueArgs<ExtArgs>>): Prisma__PipelineRunClient<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PipelineRun that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PipelineRunFindUniqueOrThrowArgs} args - Arguments to find a PipelineRun
+     * @example
+     * // Get one PipelineRun
+     * const pipelineRun = await prisma.pipelineRun.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PipelineRunFindUniqueOrThrowArgs>(args: SelectSubset<T, PipelineRunFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PipelineRunClient<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelineRun that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineRunFindFirstArgs} args - Arguments to find a PipelineRun
+     * @example
+     * // Get one PipelineRun
+     * const pipelineRun = await prisma.pipelineRun.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PipelineRunFindFirstArgs>(args?: SelectSubset<T, PipelineRunFindFirstArgs<ExtArgs>>): Prisma__PipelineRunClient<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelineRun that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineRunFindFirstOrThrowArgs} args - Arguments to find a PipelineRun
+     * @example
+     * // Get one PipelineRun
+     * const pipelineRun = await prisma.pipelineRun.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PipelineRunFindFirstOrThrowArgs>(args?: SelectSubset<T, PipelineRunFindFirstOrThrowArgs<ExtArgs>>): Prisma__PipelineRunClient<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PipelineRuns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineRunFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PipelineRuns
+     * const pipelineRuns = await prisma.pipelineRun.findMany()
+     * 
+     * // Get first 10 PipelineRuns
+     * const pipelineRuns = await prisma.pipelineRun.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pipelineRunWithIdOnly = await prisma.pipelineRun.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PipelineRunFindManyArgs>(args?: SelectSubset<T, PipelineRunFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PipelineRun.
+     * @param {PipelineRunCreateArgs} args - Arguments to create a PipelineRun.
+     * @example
+     * // Create one PipelineRun
+     * const PipelineRun = await prisma.pipelineRun.create({
+     *   data: {
+     *     // ... data to create a PipelineRun
+     *   }
+     * })
+     * 
+     */
+    create<T extends PipelineRunCreateArgs>(args: SelectSubset<T, PipelineRunCreateArgs<ExtArgs>>): Prisma__PipelineRunClient<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PipelineRuns.
+     * @param {PipelineRunCreateManyArgs} args - Arguments to create many PipelineRuns.
+     * @example
+     * // Create many PipelineRuns
+     * const pipelineRun = await prisma.pipelineRun.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PipelineRunCreateManyArgs>(args?: SelectSubset<T, PipelineRunCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PipelineRuns and returns the data saved in the database.
+     * @param {PipelineRunCreateManyAndReturnArgs} args - Arguments to create many PipelineRuns.
+     * @example
+     * // Create many PipelineRuns
+     * const pipelineRun = await prisma.pipelineRun.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PipelineRuns and only return the `id`
+     * const pipelineRunWithIdOnly = await prisma.pipelineRun.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PipelineRunCreateManyAndReturnArgs>(args?: SelectSubset<T, PipelineRunCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PipelineRun.
+     * @param {PipelineRunDeleteArgs} args - Arguments to delete one PipelineRun.
+     * @example
+     * // Delete one PipelineRun
+     * const PipelineRun = await prisma.pipelineRun.delete({
+     *   where: {
+     *     // ... filter to delete one PipelineRun
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PipelineRunDeleteArgs>(args: SelectSubset<T, PipelineRunDeleteArgs<ExtArgs>>): Prisma__PipelineRunClient<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PipelineRun.
+     * @param {PipelineRunUpdateArgs} args - Arguments to update one PipelineRun.
+     * @example
+     * // Update one PipelineRun
+     * const pipelineRun = await prisma.pipelineRun.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PipelineRunUpdateArgs>(args: SelectSubset<T, PipelineRunUpdateArgs<ExtArgs>>): Prisma__PipelineRunClient<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PipelineRuns.
+     * @param {PipelineRunDeleteManyArgs} args - Arguments to filter PipelineRuns to delete.
+     * @example
+     * // Delete a few PipelineRuns
+     * const { count } = await prisma.pipelineRun.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PipelineRunDeleteManyArgs>(args?: SelectSubset<T, PipelineRunDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PipelineRuns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineRunUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PipelineRuns
+     * const pipelineRun = await prisma.pipelineRun.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PipelineRunUpdateManyArgs>(args: SelectSubset<T, PipelineRunUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PipelineRuns and returns the data updated in the database.
+     * @param {PipelineRunUpdateManyAndReturnArgs} args - Arguments to update many PipelineRuns.
+     * @example
+     * // Update many PipelineRuns
+     * const pipelineRun = await prisma.pipelineRun.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PipelineRuns and only return the `id`
+     * const pipelineRunWithIdOnly = await prisma.pipelineRun.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PipelineRunUpdateManyAndReturnArgs>(args: SelectSubset<T, PipelineRunUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PipelineRun.
+     * @param {PipelineRunUpsertArgs} args - Arguments to update or create a PipelineRun.
+     * @example
+     * // Update or create a PipelineRun
+     * const pipelineRun = await prisma.pipelineRun.upsert({
+     *   create: {
+     *     // ... data to create a PipelineRun
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PipelineRun we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PipelineRunUpsertArgs>(args: SelectSubset<T, PipelineRunUpsertArgs<ExtArgs>>): Prisma__PipelineRunClient<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PipelineRuns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineRunCountArgs} args - Arguments to filter PipelineRuns to count.
+     * @example
+     * // Count the number of PipelineRuns
+     * const count = await prisma.pipelineRun.count({
+     *   where: {
+     *     // ... the filter for the PipelineRuns we want to count
+     *   }
+     * })
+    **/
+    count<T extends PipelineRunCountArgs>(
+      args?: Subset<T, PipelineRunCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PipelineRunCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PipelineRun.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineRunAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PipelineRunAggregateArgs>(args: Subset<T, PipelineRunAggregateArgs>): Prisma.PrismaPromise<GetPipelineRunAggregateType<T>>
+
+    /**
+     * Group by PipelineRun.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineRunGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PipelineRunGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PipelineRunGroupByArgs['orderBy'] }
+        : { orderBy?: PipelineRunGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PipelineRunGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipelineRunGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PipelineRun model
+   */
+  readonly fields: PipelineRunFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PipelineRun.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PipelineRunClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    pipeline<T extends PipelineDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PipelineDefaultArgs<ExtArgs>>): Prisma__PipelineClient<$Result.GetResult<Prisma.$PipelinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PipelineRun model
+   */
+  interface PipelineRunFieldRefs {
+    readonly id: FieldRef<"PipelineRun", 'String'>
+    readonly pipelineId: FieldRef<"PipelineRun", 'String'>
+    readonly status: FieldRef<"PipelineRun", 'PipelineRunStatus'>
+    readonly startedAt: FieldRef<"PipelineRun", 'DateTime'>
+    readonly finishedAt: FieldRef<"PipelineRun", 'DateTime'>
+    readonly error: FieldRef<"PipelineRun", 'String'>
+    readonly createdAt: FieldRef<"PipelineRun", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PipelineRun findUnique
+   */
+  export type PipelineRunFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PipelineRun to fetch.
+     */
+    where: PipelineRunWhereUniqueInput
+  }
+
+  /**
+   * PipelineRun findUniqueOrThrow
+   */
+  export type PipelineRunFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PipelineRun to fetch.
+     */
+    where: PipelineRunWhereUniqueInput
+  }
+
+  /**
+   * PipelineRun findFirst
+   */
+  export type PipelineRunFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PipelineRun to fetch.
+     */
+    where?: PipelineRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineRuns to fetch.
+     */
+    orderBy?: PipelineRunOrderByWithRelationInput | PipelineRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelineRuns.
+     */
+    cursor?: PipelineRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineRuns.
+     */
+    distinct?: PipelineRunScalarFieldEnum | PipelineRunScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineRun findFirstOrThrow
+   */
+  export type PipelineRunFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PipelineRun to fetch.
+     */
+    where?: PipelineRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineRuns to fetch.
+     */
+    orderBy?: PipelineRunOrderByWithRelationInput | PipelineRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelineRuns.
+     */
+    cursor?: PipelineRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineRuns.
+     */
+    distinct?: PipelineRunScalarFieldEnum | PipelineRunScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineRun findMany
+   */
+  export type PipelineRunFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PipelineRuns to fetch.
+     */
+    where?: PipelineRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineRuns to fetch.
+     */
+    orderBy?: PipelineRunOrderByWithRelationInput | PipelineRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PipelineRuns.
+     */
+    cursor?: PipelineRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineRuns.
+     */
+    distinct?: PipelineRunScalarFieldEnum | PipelineRunScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineRun create
+   */
+  export type PipelineRunCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PipelineRun.
+     */
+    data: XOR<PipelineRunCreateInput, PipelineRunUncheckedCreateInput>
+  }
+
+  /**
+   * PipelineRun createMany
+   */
+  export type PipelineRunCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PipelineRuns.
+     */
+    data: PipelineRunCreateManyInput | PipelineRunCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PipelineRun createManyAndReturn
+   */
+  export type PipelineRunCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * The data used to create many PipelineRuns.
+     */
+    data: PipelineRunCreateManyInput | PipelineRunCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PipelineRun update
+   */
+  export type PipelineRunUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PipelineRun.
+     */
+    data: XOR<PipelineRunUpdateInput, PipelineRunUncheckedUpdateInput>
+    /**
+     * Choose, which PipelineRun to update.
+     */
+    where: PipelineRunWhereUniqueInput
+  }
+
+  /**
+   * PipelineRun updateMany
+   */
+  export type PipelineRunUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PipelineRuns.
+     */
+    data: XOR<PipelineRunUpdateManyMutationInput, PipelineRunUncheckedUpdateManyInput>
+    /**
+     * Filter which PipelineRuns to update
+     */
+    where?: PipelineRunWhereInput
+    /**
+     * Limit how many PipelineRuns to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelineRun updateManyAndReturn
+   */
+  export type PipelineRunUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * The data used to update PipelineRuns.
+     */
+    data: XOR<PipelineRunUpdateManyMutationInput, PipelineRunUncheckedUpdateManyInput>
+    /**
+     * Filter which PipelineRuns to update
+     */
+    where?: PipelineRunWhereInput
+    /**
+     * Limit how many PipelineRuns to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PipelineRun upsert
+   */
+  export type PipelineRunUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PipelineRun to update in case it exists.
+     */
+    where: PipelineRunWhereUniqueInput
+    /**
+     * In case the PipelineRun found by the `where` argument doesn't exist, create a new PipelineRun with this data.
+     */
+    create: XOR<PipelineRunCreateInput, PipelineRunUncheckedCreateInput>
+    /**
+     * In case the PipelineRun was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PipelineRunUpdateInput, PipelineRunUncheckedUpdateInput>
+  }
+
+  /**
+   * PipelineRun delete
+   */
+  export type PipelineRunDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
+    /**
+     * Filter which PipelineRun to delete.
+     */
+    where: PipelineRunWhereUniqueInput
+  }
+
+  /**
+   * PipelineRun deleteMany
+   */
+  export type PipelineRunDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelineRuns to delete
+     */
+    where?: PipelineRunWhereInput
+    /**
+     * Limit how many PipelineRuns to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelineRun without action
+   */
+  export type PipelineRunDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineRun
+     */
+    select?: PipelineRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineRun
+     */
+    omit?: PipelineRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelineRunInclude<ExtArgs> | null
   }
 
 
@@ -8063,7 +9490,8 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     authType: 'authType',
-    airbyteSourceDefinitionId: 'airbyteSourceDefinitionId'
+    airbyteSourceDefinitionId: 'airbyteSourceDefinitionId',
+    createdAt: 'createdAt'
   };
 
   export type IntegrationScalarFieldEnum = (typeof IntegrationScalarFieldEnum)[keyof typeof IntegrationScalarFieldEnum]
@@ -8087,9 +9515,11 @@ export namespace Prisma {
   export const OrganizationScalarFieldEnum: {
     id: 'id',
     connectionId: 'connectionId',
+    workspaceId: 'workspaceId',
     externalOrgId: 'externalOrgId',
     name: 'name',
-    metadata: 'metadata'
+    metadata: 'metadata',
+    createdAt: 'createdAt'
   };
 
   export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
@@ -8098,13 +9528,28 @@ export namespace Prisma {
   export const PipelineScalarFieldEnum: {
     id: 'id',
     organizationId: 'organizationId',
+    workspaceId: 'workspaceId',
     airbyteConnectionId: 'airbyteConnectionId',
     status: 'status',
     lastSync: 'lastSync',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type PipelineScalarFieldEnum = (typeof PipelineScalarFieldEnum)[keyof typeof PipelineScalarFieldEnum]
+
+
+  export const PipelineRunScalarFieldEnum: {
+    id: 'id',
+    pipelineId: 'pipelineId',
+    status: 'status',
+    startedAt: 'startedAt',
+    finishedAt: 'finishedAt',
+    error: 'error',
+    createdAt: 'createdAt'
+  };
+
+  export type PipelineRunScalarFieldEnum = (typeof PipelineRunScalarFieldEnum)[keyof typeof PipelineRunScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -8196,6 +9641,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'PipelineStatus'
+   */
+  export type EnumPipelineStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PipelineStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PipelineStatus[]'
+   */
+  export type ListEnumPipelineStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PipelineStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PipelineRunStatus'
+   */
+  export type EnumPipelineRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PipelineRunStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PipelineRunStatus[]'
+   */
+  export type ListEnumPipelineRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PipelineRunStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -8282,6 +9755,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     connections?: ConnectionListRelationFilter
+    organizations?: OrganizationListRelationFilter
+    pipelines?: PipelineListRelationFilter
   }
 
   export type WorkspaceOrderByWithRelationInput = {
@@ -8291,6 +9766,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     owner?: UserOrderByWithRelationInput
     connections?: ConnectionOrderByRelationAggregateInput
+    organizations?: OrganizationOrderByRelationAggregateInput
+    pipelines?: PipelineOrderByRelationAggregateInput
   }
 
   export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -8303,6 +9780,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     connections?: ConnectionListRelationFilter
+    organizations?: OrganizationListRelationFilter
+    pipelines?: PipelineListRelationFilter
   }, "id">
 
   export type WorkspaceOrderByWithAggregationInput = {
@@ -8333,6 +9812,7 @@ export namespace Prisma {
     name?: StringFilter<"Integration"> | string
     authType?: StringFilter<"Integration"> | string
     airbyteSourceDefinitionId?: StringFilter<"Integration"> | string
+    createdAt?: DateTimeFilter<"Integration"> | Date | string
     connections?: ConnectionListRelationFilter
   }
 
@@ -8341,6 +9821,7 @@ export namespace Prisma {
     name?: SortOrder
     authType?: SortOrder
     airbyteSourceDefinitionId?: SortOrder
+    createdAt?: SortOrder
     connections?: ConnectionOrderByRelationAggregateInput
   }
 
@@ -8352,6 +9833,7 @@ export namespace Prisma {
     NOT?: IntegrationWhereInput | IntegrationWhereInput[]
     authType?: StringFilter<"Integration"> | string
     airbyteSourceDefinitionId?: StringFilter<"Integration"> | string
+    createdAt?: DateTimeFilter<"Integration"> | Date | string
     connections?: ConnectionListRelationFilter
   }, "id" | "name">
 
@@ -8360,6 +9842,7 @@ export namespace Prisma {
     name?: SortOrder
     authType?: SortOrder
     airbyteSourceDefinitionId?: SortOrder
+    createdAt?: SortOrder
     _count?: IntegrationCountOrderByAggregateInput
     _max?: IntegrationMaxOrderByAggregateInput
     _min?: IntegrationMinOrderByAggregateInput
@@ -8373,6 +9856,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Integration"> | string
     authType?: StringWithAggregatesFilter<"Integration"> | string
     airbyteSourceDefinitionId?: StringWithAggregatesFilter<"Integration"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Integration"> | Date | string
   }
 
   export type ConnectionWhereInput = {
@@ -8462,42 +9946,54 @@ export namespace Prisma {
     NOT?: OrganizationWhereInput | OrganizationWhereInput[]
     id?: StringFilter<"Organization"> | string
     connectionId?: StringFilter<"Organization"> | string
+    workspaceId?: StringFilter<"Organization"> | string
     externalOrgId?: StringFilter<"Organization"> | string
     name?: StringFilter<"Organization"> | string
     metadata?: JsonNullableFilter<"Organization">
+    createdAt?: DateTimeFilter<"Organization"> | Date | string
     connection?: XOR<ConnectionScalarRelationFilter, ConnectionWhereInput>
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     pipelines?: PipelineListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
     id?: SortOrder
     connectionId?: SortOrder
+    workspaceId?: SortOrder
     externalOrgId?: SortOrder
     name?: SortOrder
     metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     connection?: ConnectionOrderByWithRelationInput
+    workspace?: WorkspaceOrderByWithRelationInput
     pipelines?: PipelineOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    connectionId_externalOrgId?: OrganizationConnectionIdExternalOrgIdCompoundUniqueInput
     AND?: OrganizationWhereInput | OrganizationWhereInput[]
     OR?: OrganizationWhereInput[]
     NOT?: OrganizationWhereInput | OrganizationWhereInput[]
     connectionId?: StringFilter<"Organization"> | string
+    workspaceId?: StringFilter<"Organization"> | string
     externalOrgId?: StringFilter<"Organization"> | string
     name?: StringFilter<"Organization"> | string
     metadata?: JsonNullableFilter<"Organization">
+    createdAt?: DateTimeFilter<"Organization"> | Date | string
     connection?: XOR<ConnectionScalarRelationFilter, ConnectionWhereInput>
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     pipelines?: PipelineListRelationFilter
-  }, "id">
+  }, "id" | "connectionId_externalOrgId">
 
   export type OrganizationOrderByWithAggregationInput = {
     id?: SortOrder
     connectionId?: SortOrder
+    workspaceId?: SortOrder
     externalOrgId?: SortOrder
     name?: SortOrder
     metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     _count?: OrganizationCountOrderByAggregateInput
     _max?: OrganizationMaxOrderByAggregateInput
     _min?: OrganizationMinOrderByAggregateInput
@@ -8509,9 +10005,11 @@ export namespace Prisma {
     NOT?: OrganizationScalarWhereWithAggregatesInput | OrganizationScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Organization"> | string
     connectionId?: StringWithAggregatesFilter<"Organization"> | string
+    workspaceId?: StringWithAggregatesFilter<"Organization"> | string
     externalOrgId?: StringWithAggregatesFilter<"Organization"> | string
     name?: StringWithAggregatesFilter<"Organization"> | string
     metadata?: JsonNullableWithAggregatesFilter<"Organization">
+    createdAt?: DateTimeWithAggregatesFilter<"Organization"> | Date | string
   }
 
   export type PipelineWhereInput = {
@@ -8520,43 +10018,57 @@ export namespace Prisma {
     NOT?: PipelineWhereInput | PipelineWhereInput[]
     id?: StringFilter<"Pipeline"> | string
     organizationId?: StringFilter<"Pipeline"> | string
+    workspaceId?: StringFilter<"Pipeline"> | string
     airbyteConnectionId?: StringFilter<"Pipeline"> | string
-    status?: StringFilter<"Pipeline"> | string
+    status?: EnumPipelineStatusFilter<"Pipeline"> | $Enums.PipelineStatus
     lastSync?: DateTimeNullableFilter<"Pipeline"> | Date | string | null
     createdAt?: DateTimeFilter<"Pipeline"> | Date | string
+    updatedAt?: DateTimeFilter<"Pipeline"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    runs?: PipelineRunListRelationFilter
   }
 
   export type PipelineOrderByWithRelationInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    workspaceId?: SortOrder
     airbyteConnectionId?: SortOrder
     status?: SortOrder
     lastSync?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
+    workspace?: WorkspaceOrderByWithRelationInput
+    runs?: PipelineRunOrderByRelationAggregateInput
   }
 
   export type PipelineWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    organizationId?: string
     AND?: PipelineWhereInput | PipelineWhereInput[]
     OR?: PipelineWhereInput[]
     NOT?: PipelineWhereInput | PipelineWhereInput[]
-    organizationId?: StringFilter<"Pipeline"> | string
+    workspaceId?: StringFilter<"Pipeline"> | string
     airbyteConnectionId?: StringFilter<"Pipeline"> | string
-    status?: StringFilter<"Pipeline"> | string
+    status?: EnumPipelineStatusFilter<"Pipeline"> | $Enums.PipelineStatus
     lastSync?: DateTimeNullableFilter<"Pipeline"> | Date | string | null
     createdAt?: DateTimeFilter<"Pipeline"> | Date | string
+    updatedAt?: DateTimeFilter<"Pipeline"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-  }, "id">
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    runs?: PipelineRunListRelationFilter
+  }, "id" | "organizationId">
 
   export type PipelineOrderByWithAggregationInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    workspaceId?: SortOrder
     airbyteConnectionId?: SortOrder
     status?: SortOrder
     lastSync?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: PipelineCountOrderByAggregateInput
     _max?: PipelineMaxOrderByAggregateInput
     _min?: PipelineMinOrderByAggregateInput
@@ -8568,10 +10080,77 @@ export namespace Prisma {
     NOT?: PipelineScalarWhereWithAggregatesInput | PipelineScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Pipeline"> | string
     organizationId?: StringWithAggregatesFilter<"Pipeline"> | string
+    workspaceId?: StringWithAggregatesFilter<"Pipeline"> | string
     airbyteConnectionId?: StringWithAggregatesFilter<"Pipeline"> | string
-    status?: StringWithAggregatesFilter<"Pipeline"> | string
+    status?: EnumPipelineStatusWithAggregatesFilter<"Pipeline"> | $Enums.PipelineStatus
     lastSync?: DateTimeNullableWithAggregatesFilter<"Pipeline"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Pipeline"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Pipeline"> | Date | string
+  }
+
+  export type PipelineRunWhereInput = {
+    AND?: PipelineRunWhereInput | PipelineRunWhereInput[]
+    OR?: PipelineRunWhereInput[]
+    NOT?: PipelineRunWhereInput | PipelineRunWhereInput[]
+    id?: StringFilter<"PipelineRun"> | string
+    pipelineId?: StringFilter<"PipelineRun"> | string
+    status?: EnumPipelineRunStatusFilter<"PipelineRun"> | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFilter<"PipelineRun"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"PipelineRun"> | Date | string | null
+    error?: StringNullableFilter<"PipelineRun"> | string | null
+    createdAt?: DateTimeFilter<"PipelineRun"> | Date | string
+    pipeline?: XOR<PipelineScalarRelationFilter, PipelineWhereInput>
+  }
+
+  export type PipelineRunOrderByWithRelationInput = {
+    id?: SortOrder
+    pipelineId?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    pipeline?: PipelineOrderByWithRelationInput
+  }
+
+  export type PipelineRunWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PipelineRunWhereInput | PipelineRunWhereInput[]
+    OR?: PipelineRunWhereInput[]
+    NOT?: PipelineRunWhereInput | PipelineRunWhereInput[]
+    pipelineId?: StringFilter<"PipelineRun"> | string
+    status?: EnumPipelineRunStatusFilter<"PipelineRun"> | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFilter<"PipelineRun"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"PipelineRun"> | Date | string | null
+    error?: StringNullableFilter<"PipelineRun"> | string | null
+    createdAt?: DateTimeFilter<"PipelineRun"> | Date | string
+    pipeline?: XOR<PipelineScalarRelationFilter, PipelineWhereInput>
+  }, "id">
+
+  export type PipelineRunOrderByWithAggregationInput = {
+    id?: SortOrder
+    pipelineId?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: PipelineRunCountOrderByAggregateInput
+    _max?: PipelineRunMaxOrderByAggregateInput
+    _min?: PipelineRunMinOrderByAggregateInput
+  }
+
+  export type PipelineRunScalarWhereWithAggregatesInput = {
+    AND?: PipelineRunScalarWhereWithAggregatesInput | PipelineRunScalarWhereWithAggregatesInput[]
+    OR?: PipelineRunScalarWhereWithAggregatesInput[]
+    NOT?: PipelineRunScalarWhereWithAggregatesInput | PipelineRunScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PipelineRun"> | string
+    pipelineId?: StringWithAggregatesFilter<"PipelineRun"> | string
+    status?: EnumPipelineRunStatusWithAggregatesFilter<"PipelineRun"> | $Enums.PipelineRunStatus
+    startedAt?: DateTimeWithAggregatesFilter<"PipelineRun"> | Date | string
+    finishedAt?: DateTimeNullableWithAggregatesFilter<"PipelineRun"> | Date | string | null
+    error?: StringNullableWithAggregatesFilter<"PipelineRun"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PipelineRun"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -8647,6 +10226,8 @@ export namespace Prisma {
     createdAt?: Date | string
     owner: UserCreateNestedOneWithoutWorkspacesInput
     connections?: ConnectionCreateNestedManyWithoutWorkspaceInput
+    organizations?: OrganizationCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateInput = {
@@ -8655,6 +10236,8 @@ export namespace Prisma {
     ownerUserId: string
     createdAt?: Date | string
     connections?: ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+    organizations?: OrganizationUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUpdateInput = {
@@ -8663,6 +10246,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutWorkspacesNestedInput
     connections?: ConnectionUpdateManyWithoutWorkspaceNestedInput
+    organizations?: OrganizationUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateInput = {
@@ -8671,6 +10256,8 @@ export namespace Prisma {
     ownerUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connections?: ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+    organizations?: OrganizationUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateManyInput = {
@@ -8698,6 +10285,7 @@ export namespace Prisma {
     name: string
     authType: string
     airbyteSourceDefinitionId: string
+    createdAt?: Date | string
     connections?: ConnectionCreateNestedManyWithoutIntegrationInput
   }
 
@@ -8706,6 +10294,7 @@ export namespace Prisma {
     name: string
     authType: string
     airbyteSourceDefinitionId: string
+    createdAt?: Date | string
     connections?: ConnectionUncheckedCreateNestedManyWithoutIntegrationInput
   }
 
@@ -8714,6 +10303,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     authType?: StringFieldUpdateOperationsInput | string
     airbyteSourceDefinitionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connections?: ConnectionUpdateManyWithoutIntegrationNestedInput
   }
 
@@ -8722,6 +10312,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     authType?: StringFieldUpdateOperationsInput | string
     airbyteSourceDefinitionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connections?: ConnectionUncheckedUpdateManyWithoutIntegrationNestedInput
   }
 
@@ -8730,6 +10321,7 @@ export namespace Prisma {
     name: string
     authType: string
     airbyteSourceDefinitionId: string
+    createdAt?: Date | string
   }
 
   export type IntegrationUpdateManyMutationInput = {
@@ -8737,6 +10329,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     authType?: StringFieldUpdateOperationsInput | string
     airbyteSourceDefinitionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntegrationUncheckedUpdateManyInput = {
@@ -8744,6 +10337,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     authType?: StringFieldUpdateOperationsInput | string
     airbyteSourceDefinitionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ConnectionCreateInput = {
@@ -8837,16 +10431,20 @@ export namespace Prisma {
     externalOrgId: string
     name: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
     connection: ConnectionCreateNestedOneWithoutOrganizationsInput
+    workspace: WorkspaceCreateNestedOneWithoutOrganizationsInput
     pipelines?: PipelineCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
     id?: string
     connectionId: string
+    workspaceId: string
     externalOrgId: string
     name: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
     pipelines?: PipelineUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -8855,25 +10453,31 @@ export namespace Prisma {
     externalOrgId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connection?: ConnectionUpdateOneRequiredWithoutOrganizationsNestedInput
+    workspace?: WorkspaceUpdateOneRequiredWithoutOrganizationsNestedInput
     pipelines?: PipelineUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     connectionId?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
     externalOrgId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pipelines?: PipelineUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
     id?: string
     connectionId: string
+    workspaceId: string
     externalOrgId: string
     name: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
   }
 
   export type OrganizationUpdateManyMutationInput = {
@@ -8881,75 +10485,164 @@ export namespace Prisma {
     externalOrgId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrganizationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     connectionId?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
     externalOrgId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PipelineCreateInput = {
     id?: string
     airbyteConnectionId: string
-    status: string
+    status: $Enums.PipelineStatus
     lastSync?: Date | string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutPipelinesInput
+    workspace: WorkspaceCreateNestedOneWithoutPipelinesInput
+    runs?: PipelineRunCreateNestedManyWithoutPipelineInput
   }
 
   export type PipelineUncheckedCreateInput = {
     id?: string
     organizationId: string
+    workspaceId: string
     airbyteConnectionId: string
-    status: string
+    status: $Enums.PipelineStatus
     lastSync?: Date | string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    runs?: PipelineRunUncheckedCreateNestedManyWithoutPipelineInput
   }
 
   export type PipelineUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     airbyteConnectionId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
     lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutPipelinesNestedInput
+    workspace?: WorkspaceUpdateOneRequiredWithoutPipelinesNestedInput
+    runs?: PipelineRunUpdateManyWithoutPipelineNestedInput
   }
 
   export type PipelineUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
     airbyteConnectionId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
     lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runs?: PipelineRunUncheckedUpdateManyWithoutPipelineNestedInput
   }
 
   export type PipelineCreateManyInput = {
     id?: string
     organizationId: string
+    workspaceId: string
     airbyteConnectionId: string
-    status: string
+    status: $Enums.PipelineStatus
     lastSync?: Date | string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PipelineUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     airbyteConnectionId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
     lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PipelineUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
     airbyteConnectionId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
     lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineRunCreateInput = {
+    id?: string
+    status: $Enums.PipelineRunStatus
+    startedAt: Date | string
+    finishedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+    pipeline: PipelineCreateNestedOneWithoutRunsInput
+  }
+
+  export type PipelineRunUncheckedCreateInput = {
+    id?: string
+    pipelineId: string
+    status: $Enums.PipelineRunStatus
+    startedAt: Date | string
+    finishedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PipelineRunUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineRunStatusFieldUpdateOperationsInput | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pipeline?: PipelineUpdateOneRequiredWithoutRunsNestedInput
+  }
+
+  export type PipelineRunUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pipelineId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineRunStatusFieldUpdateOperationsInput | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineRunCreateManyInput = {
+    id?: string
+    pipelineId: string
+    status: $Enums.PipelineRunStatus
+    startedAt: Date | string
+    finishedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PipelineRunUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineRunStatusFieldUpdateOperationsInput | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineRunUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pipelineId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineRunStatusFieldUpdateOperationsInput | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9097,7 +10790,27 @@ export namespace Prisma {
     none?: ConnectionWhereInput
   }
 
+  export type OrganizationListRelationFilter = {
+    every?: OrganizationWhereInput
+    some?: OrganizationWhereInput
+    none?: OrganizationWhereInput
+  }
+
+  export type PipelineListRelationFilter = {
+    every?: PipelineWhereInput
+    some?: PipelineWhereInput
+    none?: PipelineWhereInput
+  }
+
   export type ConnectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrganizationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PipelineOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9127,6 +10840,7 @@ export namespace Prisma {
     name?: SortOrder
     authType?: SortOrder
     airbyteSourceDefinitionId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type IntegrationMaxOrderByAggregateInput = {
@@ -9134,6 +10848,7 @@ export namespace Prisma {
     name?: SortOrder
     authType?: SortOrder
     airbyteSourceDefinitionId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type IntegrationMinOrderByAggregateInput = {
@@ -9141,6 +10856,7 @@ export namespace Prisma {
     name?: SortOrder
     authType?: SortOrder
     airbyteSourceDefinitionId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -9162,16 +10878,6 @@ export namespace Prisma {
   export type IntegrationScalarRelationFilter = {
     is?: IntegrationWhereInput
     isNot?: IntegrationWhereInput
-  }
-
-  export type OrganizationListRelationFilter = {
-    every?: OrganizationWhereInput
-    some?: OrganizationWhereInput
-    none?: OrganizationWhereInput
-  }
-
-  export type OrganizationOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type ConnectionCountOrderByAggregateInput = {
@@ -9252,36 +10958,37 @@ export namespace Prisma {
     isNot?: ConnectionWhereInput
   }
 
-  export type PipelineListRelationFilter = {
-    every?: PipelineWhereInput
-    some?: PipelineWhereInput
-    none?: PipelineWhereInput
-  }
-
-  export type PipelineOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type OrganizationConnectionIdExternalOrgIdCompoundUniqueInput = {
+    connectionId: string
+    externalOrgId: string
   }
 
   export type OrganizationCountOrderByAggregateInput = {
     id?: SortOrder
     connectionId?: SortOrder
+    workspaceId?: SortOrder
     externalOrgId?: SortOrder
     name?: SortOrder
     metadata?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type OrganizationMaxOrderByAggregateInput = {
     id?: SortOrder
     connectionId?: SortOrder
+    workspaceId?: SortOrder
     externalOrgId?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type OrganizationMinOrderByAggregateInput = {
     id?: SortOrder
     connectionId?: SortOrder
+    workspaceId?: SortOrder
     externalOrgId?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -9310,36 +11017,121 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
+  export type EnumPipelineStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PipelineStatus | EnumPipelineStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PipelineStatus[] | ListEnumPipelineStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PipelineStatus[] | ListEnumPipelineStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPipelineStatusFilter<$PrismaModel> | $Enums.PipelineStatus
+  }
+
   export type OrganizationScalarRelationFilter = {
     is?: OrganizationWhereInput
     isNot?: OrganizationWhereInput
   }
 
+  export type PipelineRunListRelationFilter = {
+    every?: PipelineRunWhereInput
+    some?: PipelineRunWhereInput
+    none?: PipelineRunWhereInput
+  }
+
+  export type PipelineRunOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type PipelineCountOrderByAggregateInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    workspaceId?: SortOrder
     airbyteConnectionId?: SortOrder
     status?: SortOrder
     lastSync?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PipelineMaxOrderByAggregateInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    workspaceId?: SortOrder
     airbyteConnectionId?: SortOrder
     status?: SortOrder
     lastSync?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PipelineMinOrderByAggregateInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    workspaceId?: SortOrder
     airbyteConnectionId?: SortOrder
     status?: SortOrder
     lastSync?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumPipelineStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PipelineStatus | EnumPipelineStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PipelineStatus[] | ListEnumPipelineStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PipelineStatus[] | ListEnumPipelineStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPipelineStatusWithAggregatesFilter<$PrismaModel> | $Enums.PipelineStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPipelineStatusFilter<$PrismaModel>
+    _max?: NestedEnumPipelineStatusFilter<$PrismaModel>
+  }
+
+  export type EnumPipelineRunStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PipelineRunStatus | EnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PipelineRunStatus[] | ListEnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PipelineRunStatus[] | ListEnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPipelineRunStatusFilter<$PrismaModel> | $Enums.PipelineRunStatus
+  }
+
+  export type PipelineScalarRelationFilter = {
+    is?: PipelineWhereInput
+    isNot?: PipelineWhereInput
+  }
+
+  export type PipelineRunCountOrderByAggregateInput = {
+    id?: SortOrder
+    pipelineId?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PipelineRunMaxOrderByAggregateInput = {
+    id?: SortOrder
+    pipelineId?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PipelineRunMinOrderByAggregateInput = {
+    id?: SortOrder
+    pipelineId?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumPipelineRunStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PipelineRunStatus | EnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PipelineRunStatus[] | ListEnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PipelineRunStatus[] | ListEnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPipelineRunStatusWithAggregatesFilter<$PrismaModel> | $Enums.PipelineRunStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPipelineRunStatusFilter<$PrismaModel>
+    _max?: NestedEnumPipelineRunStatusFilter<$PrismaModel>
   }
 
   export type WorkspaceCreateNestedManyWithoutOwnerInput = {
@@ -9409,11 +11201,39 @@ export namespace Prisma {
     connect?: ConnectionWhereUniqueInput | ConnectionWhereUniqueInput[]
   }
 
+  export type OrganizationCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<OrganizationCreateWithoutWorkspaceInput, OrganizationUncheckedCreateWithoutWorkspaceInput> | OrganizationCreateWithoutWorkspaceInput[] | OrganizationUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: OrganizationCreateOrConnectWithoutWorkspaceInput | OrganizationCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: OrganizationCreateManyWorkspaceInputEnvelope
+    connect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+  }
+
+  export type PipelineCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<PipelineCreateWithoutWorkspaceInput, PipelineUncheckedCreateWithoutWorkspaceInput> | PipelineCreateWithoutWorkspaceInput[] | PipelineUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: PipelineCreateOrConnectWithoutWorkspaceInput | PipelineCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: PipelineCreateManyWorkspaceInputEnvelope
+    connect?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
+  }
+
   export type ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<ConnectionCreateWithoutWorkspaceInput, ConnectionUncheckedCreateWithoutWorkspaceInput> | ConnectionCreateWithoutWorkspaceInput[] | ConnectionUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: ConnectionCreateOrConnectWithoutWorkspaceInput | ConnectionCreateOrConnectWithoutWorkspaceInput[]
     createMany?: ConnectionCreateManyWorkspaceInputEnvelope
     connect?: ConnectionWhereUniqueInput | ConnectionWhereUniqueInput[]
+  }
+
+  export type OrganizationUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<OrganizationCreateWithoutWorkspaceInput, OrganizationUncheckedCreateWithoutWorkspaceInput> | OrganizationCreateWithoutWorkspaceInput[] | OrganizationUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: OrganizationCreateOrConnectWithoutWorkspaceInput | OrganizationCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: OrganizationCreateManyWorkspaceInputEnvelope
+    connect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+  }
+
+  export type PipelineUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<PipelineCreateWithoutWorkspaceInput, PipelineUncheckedCreateWithoutWorkspaceInput> | PipelineCreateWithoutWorkspaceInput[] | PipelineUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: PipelineCreateOrConnectWithoutWorkspaceInput | PipelineCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: PipelineCreateManyWorkspaceInputEnvelope
+    connect?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutWorkspacesNestedInput = {
@@ -9438,6 +11258,34 @@ export namespace Prisma {
     deleteMany?: ConnectionScalarWhereInput | ConnectionScalarWhereInput[]
   }
 
+  export type OrganizationUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<OrganizationCreateWithoutWorkspaceInput, OrganizationUncheckedCreateWithoutWorkspaceInput> | OrganizationCreateWithoutWorkspaceInput[] | OrganizationUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: OrganizationCreateOrConnectWithoutWorkspaceInput | OrganizationCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: OrganizationUpsertWithWhereUniqueWithoutWorkspaceInput | OrganizationUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: OrganizationCreateManyWorkspaceInputEnvelope
+    set?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    disconnect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    delete?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    connect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    update?: OrganizationUpdateWithWhereUniqueWithoutWorkspaceInput | OrganizationUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: OrganizationUpdateManyWithWhereWithoutWorkspaceInput | OrganizationUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
+  }
+
+  export type PipelineUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<PipelineCreateWithoutWorkspaceInput, PipelineUncheckedCreateWithoutWorkspaceInput> | PipelineCreateWithoutWorkspaceInput[] | PipelineUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: PipelineCreateOrConnectWithoutWorkspaceInput | PipelineCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: PipelineUpsertWithWhereUniqueWithoutWorkspaceInput | PipelineUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: PipelineCreateManyWorkspaceInputEnvelope
+    set?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
+    disconnect?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
+    delete?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
+    connect?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
+    update?: PipelineUpdateWithWhereUniqueWithoutWorkspaceInput | PipelineUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: PipelineUpdateManyWithWhereWithoutWorkspaceInput | PipelineUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: PipelineScalarWhereInput | PipelineScalarWhereInput[]
+  }
+
   export type ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput = {
     create?: XOR<ConnectionCreateWithoutWorkspaceInput, ConnectionUncheckedCreateWithoutWorkspaceInput> | ConnectionCreateWithoutWorkspaceInput[] | ConnectionUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: ConnectionCreateOrConnectWithoutWorkspaceInput | ConnectionCreateOrConnectWithoutWorkspaceInput[]
@@ -9450,6 +11298,34 @@ export namespace Prisma {
     update?: ConnectionUpdateWithWhereUniqueWithoutWorkspaceInput | ConnectionUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: ConnectionUpdateManyWithWhereWithoutWorkspaceInput | ConnectionUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: ConnectionScalarWhereInput | ConnectionScalarWhereInput[]
+  }
+
+  export type OrganizationUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<OrganizationCreateWithoutWorkspaceInput, OrganizationUncheckedCreateWithoutWorkspaceInput> | OrganizationCreateWithoutWorkspaceInput[] | OrganizationUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: OrganizationCreateOrConnectWithoutWorkspaceInput | OrganizationCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: OrganizationUpsertWithWhereUniqueWithoutWorkspaceInput | OrganizationUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: OrganizationCreateManyWorkspaceInputEnvelope
+    set?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    disconnect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    delete?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    connect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    update?: OrganizationUpdateWithWhereUniqueWithoutWorkspaceInput | OrganizationUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: OrganizationUpdateManyWithWhereWithoutWorkspaceInput | OrganizationUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
+  }
+
+  export type PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<PipelineCreateWithoutWorkspaceInput, PipelineUncheckedCreateWithoutWorkspaceInput> | PipelineCreateWithoutWorkspaceInput[] | PipelineUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: PipelineCreateOrConnectWithoutWorkspaceInput | PipelineCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: PipelineUpsertWithWhereUniqueWithoutWorkspaceInput | PipelineUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: PipelineCreateManyWorkspaceInputEnvelope
+    set?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
+    disconnect?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
+    delete?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
+    connect?: PipelineWhereUniqueInput | PipelineWhereUniqueInput[]
+    update?: PipelineUpdateWithWhereUniqueWithoutWorkspaceInput | PipelineUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: PipelineUpdateManyWithWhereWithoutWorkspaceInput | PipelineUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: PipelineScalarWhereInput | PipelineScalarWhereInput[]
   }
 
   export type ConnectionCreateNestedManyWithoutIntegrationInput = {
@@ -9574,6 +11450,12 @@ export namespace Prisma {
     connect?: ConnectionWhereUniqueInput
   }
 
+  export type WorkspaceCreateNestedOneWithoutOrganizationsInput = {
+    create?: XOR<WorkspaceCreateWithoutOrganizationsInput, WorkspaceUncheckedCreateWithoutOrganizationsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutOrganizationsInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
   export type PipelineCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<PipelineCreateWithoutOrganizationInput, PipelineUncheckedCreateWithoutOrganizationInput> | PipelineCreateWithoutOrganizationInput[] | PipelineUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: PipelineCreateOrConnectWithoutOrganizationInput | PipelineCreateOrConnectWithoutOrganizationInput[]
@@ -9594,6 +11476,14 @@ export namespace Prisma {
     upsert?: ConnectionUpsertWithoutOrganizationsInput
     connect?: ConnectionWhereUniqueInput
     update?: XOR<XOR<ConnectionUpdateToOneWithWhereWithoutOrganizationsInput, ConnectionUpdateWithoutOrganizationsInput>, ConnectionUncheckedUpdateWithoutOrganizationsInput>
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutOrganizationsNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutOrganizationsInput, WorkspaceUncheckedCreateWithoutOrganizationsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutOrganizationsInput
+    upsert?: WorkspaceUpsertWithoutOrganizationsInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutOrganizationsInput, WorkspaceUpdateWithoutOrganizationsInput>, WorkspaceUncheckedUpdateWithoutOrganizationsInput>
   }
 
   export type PipelineUpdateManyWithoutOrganizationNestedInput = {
@@ -9630,12 +11520,90 @@ export namespace Prisma {
     connect?: OrganizationWhereUniqueInput
   }
 
+  export type WorkspaceCreateNestedOneWithoutPipelinesInput = {
+    create?: XOR<WorkspaceCreateWithoutPipelinesInput, WorkspaceUncheckedCreateWithoutPipelinesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutPipelinesInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type PipelineRunCreateNestedManyWithoutPipelineInput = {
+    create?: XOR<PipelineRunCreateWithoutPipelineInput, PipelineRunUncheckedCreateWithoutPipelineInput> | PipelineRunCreateWithoutPipelineInput[] | PipelineRunUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: PipelineRunCreateOrConnectWithoutPipelineInput | PipelineRunCreateOrConnectWithoutPipelineInput[]
+    createMany?: PipelineRunCreateManyPipelineInputEnvelope
+    connect?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+  }
+
+  export type PipelineRunUncheckedCreateNestedManyWithoutPipelineInput = {
+    create?: XOR<PipelineRunCreateWithoutPipelineInput, PipelineRunUncheckedCreateWithoutPipelineInput> | PipelineRunCreateWithoutPipelineInput[] | PipelineRunUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: PipelineRunCreateOrConnectWithoutPipelineInput | PipelineRunCreateOrConnectWithoutPipelineInput[]
+    createMany?: PipelineRunCreateManyPipelineInputEnvelope
+    connect?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+  }
+
+  export type EnumPipelineStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PipelineStatus
+  }
+
   export type OrganizationUpdateOneRequiredWithoutPipelinesNestedInput = {
     create?: XOR<OrganizationCreateWithoutPipelinesInput, OrganizationUncheckedCreateWithoutPipelinesInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutPipelinesInput
     upsert?: OrganizationUpsertWithoutPipelinesInput
     connect?: OrganizationWhereUniqueInput
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutPipelinesInput, OrganizationUpdateWithoutPipelinesInput>, OrganizationUncheckedUpdateWithoutPipelinesInput>
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutPipelinesNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutPipelinesInput, WorkspaceUncheckedCreateWithoutPipelinesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutPipelinesInput
+    upsert?: WorkspaceUpsertWithoutPipelinesInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutPipelinesInput, WorkspaceUpdateWithoutPipelinesInput>, WorkspaceUncheckedUpdateWithoutPipelinesInput>
+  }
+
+  export type PipelineRunUpdateManyWithoutPipelineNestedInput = {
+    create?: XOR<PipelineRunCreateWithoutPipelineInput, PipelineRunUncheckedCreateWithoutPipelineInput> | PipelineRunCreateWithoutPipelineInput[] | PipelineRunUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: PipelineRunCreateOrConnectWithoutPipelineInput | PipelineRunCreateOrConnectWithoutPipelineInput[]
+    upsert?: PipelineRunUpsertWithWhereUniqueWithoutPipelineInput | PipelineRunUpsertWithWhereUniqueWithoutPipelineInput[]
+    createMany?: PipelineRunCreateManyPipelineInputEnvelope
+    set?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+    disconnect?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+    delete?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+    connect?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+    update?: PipelineRunUpdateWithWhereUniqueWithoutPipelineInput | PipelineRunUpdateWithWhereUniqueWithoutPipelineInput[]
+    updateMany?: PipelineRunUpdateManyWithWhereWithoutPipelineInput | PipelineRunUpdateManyWithWhereWithoutPipelineInput[]
+    deleteMany?: PipelineRunScalarWhereInput | PipelineRunScalarWhereInput[]
+  }
+
+  export type PipelineRunUncheckedUpdateManyWithoutPipelineNestedInput = {
+    create?: XOR<PipelineRunCreateWithoutPipelineInput, PipelineRunUncheckedCreateWithoutPipelineInput> | PipelineRunCreateWithoutPipelineInput[] | PipelineRunUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: PipelineRunCreateOrConnectWithoutPipelineInput | PipelineRunCreateOrConnectWithoutPipelineInput[]
+    upsert?: PipelineRunUpsertWithWhereUniqueWithoutPipelineInput | PipelineRunUpsertWithWhereUniqueWithoutPipelineInput[]
+    createMany?: PipelineRunCreateManyPipelineInputEnvelope
+    set?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+    disconnect?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+    delete?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+    connect?: PipelineRunWhereUniqueInput | PipelineRunWhereUniqueInput[]
+    update?: PipelineRunUpdateWithWhereUniqueWithoutPipelineInput | PipelineRunUpdateWithWhereUniqueWithoutPipelineInput[]
+    updateMany?: PipelineRunUpdateManyWithWhereWithoutPipelineInput | PipelineRunUpdateManyWithWhereWithoutPipelineInput[]
+    deleteMany?: PipelineRunScalarWhereInput | PipelineRunScalarWhereInput[]
+  }
+
+  export type PipelineCreateNestedOneWithoutRunsInput = {
+    create?: XOR<PipelineCreateWithoutRunsInput, PipelineUncheckedCreateWithoutRunsInput>
+    connectOrCreate?: PipelineCreateOrConnectWithoutRunsInput
+    connect?: PipelineWhereUniqueInput
+  }
+
+  export type EnumPipelineRunStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PipelineRunStatus
+  }
+
+  export type PipelineUpdateOneRequiredWithoutRunsNestedInput = {
+    create?: XOR<PipelineCreateWithoutRunsInput, PipelineUncheckedCreateWithoutRunsInput>
+    connectOrCreate?: PipelineCreateOrConnectWithoutRunsInput
+    upsert?: PipelineUpsertWithoutRunsInput
+    connect?: PipelineWhereUniqueInput
+    update?: XOR<XOR<PipelineUpdateToOneWithWhereWithoutRunsInput, PipelineUpdateWithoutRunsInput>, PipelineUncheckedUpdateWithoutRunsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -9795,11 +11763,47 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumPipelineStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PipelineStatus | EnumPipelineStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PipelineStatus[] | ListEnumPipelineStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PipelineStatus[] | ListEnumPipelineStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPipelineStatusFilter<$PrismaModel> | $Enums.PipelineStatus
+  }
+
+  export type NestedEnumPipelineStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PipelineStatus | EnumPipelineStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PipelineStatus[] | ListEnumPipelineStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PipelineStatus[] | ListEnumPipelineStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPipelineStatusWithAggregatesFilter<$PrismaModel> | $Enums.PipelineStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPipelineStatusFilter<$PrismaModel>
+    _max?: NestedEnumPipelineStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPipelineRunStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PipelineRunStatus | EnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PipelineRunStatus[] | ListEnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PipelineRunStatus[] | ListEnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPipelineRunStatusFilter<$PrismaModel> | $Enums.PipelineRunStatus
+  }
+
+  export type NestedEnumPipelineRunStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PipelineRunStatus | EnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PipelineRunStatus[] | ListEnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PipelineRunStatus[] | ListEnumPipelineRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPipelineRunStatusWithAggregatesFilter<$PrismaModel> | $Enums.PipelineRunStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPipelineRunStatusFilter<$PrismaModel>
+    _max?: NestedEnumPipelineRunStatusFilter<$PrismaModel>
+  }
+
   export type WorkspaceCreateWithoutOwnerInput = {
     id?: string
     name: string
     createdAt?: Date | string
     connections?: ConnectionCreateNestedManyWithoutWorkspaceInput
+    organizations?: OrganizationCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutOwnerInput = {
@@ -9807,6 +11811,8 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     connections?: ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+    organizations?: OrganizationUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutOwnerInput = {
@@ -9902,6 +11908,68 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OrganizationCreateWithoutWorkspaceInput = {
+    id?: string
+    externalOrgId: string
+    name: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    connection: ConnectionCreateNestedOneWithoutOrganizationsInput
+    pipelines?: PipelineCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    connectionId: string
+    externalOrgId: string
+    name: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutWorkspaceInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutWorkspaceInput, OrganizationUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type OrganizationCreateManyWorkspaceInputEnvelope = {
+    data: OrganizationCreateManyWorkspaceInput | OrganizationCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PipelineCreateWithoutWorkspaceInput = {
+    id?: string
+    airbyteConnectionId: string
+    status: $Enums.PipelineStatus
+    lastSync?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutPipelinesInput
+    runs?: PipelineRunCreateNestedManyWithoutPipelineInput
+  }
+
+  export type PipelineUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    organizationId: string
+    airbyteConnectionId: string
+    status: $Enums.PipelineStatus
+    lastSync?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    runs?: PipelineRunUncheckedCreateNestedManyWithoutPipelineInput
+  }
+
+  export type PipelineCreateOrConnectWithoutWorkspaceInput = {
+    where: PipelineWhereUniqueInput
+    create: XOR<PipelineCreateWithoutWorkspaceInput, PipelineUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type PipelineCreateManyWorkspaceInputEnvelope = {
+    data: PipelineCreateManyWorkspaceInput | PipelineCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutWorkspacesInput = {
     update: XOR<UserUpdateWithoutWorkspacesInput, UserUncheckedUpdateWithoutWorkspacesInput>
     create: XOR<UserCreateWithoutWorkspacesInput, UserUncheckedCreateWithoutWorkspacesInput>
@@ -9962,6 +12030,65 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Connection"> | Date | string
   }
 
+  export type OrganizationUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: OrganizationWhereUniqueInput
+    update: XOR<OrganizationUpdateWithoutWorkspaceInput, OrganizationUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<OrganizationCreateWithoutWorkspaceInput, OrganizationUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type OrganizationUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: OrganizationWhereUniqueInput
+    data: XOR<OrganizationUpdateWithoutWorkspaceInput, OrganizationUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type OrganizationUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: OrganizationScalarWhereInput
+    data: XOR<OrganizationUpdateManyMutationInput, OrganizationUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type OrganizationScalarWhereInput = {
+    AND?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
+    OR?: OrganizationScalarWhereInput[]
+    NOT?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
+    id?: StringFilter<"Organization"> | string
+    connectionId?: StringFilter<"Organization"> | string
+    workspaceId?: StringFilter<"Organization"> | string
+    externalOrgId?: StringFilter<"Organization"> | string
+    name?: StringFilter<"Organization"> | string
+    metadata?: JsonNullableFilter<"Organization">
+    createdAt?: DateTimeFilter<"Organization"> | Date | string
+  }
+
+  export type PipelineUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: PipelineWhereUniqueInput
+    update: XOR<PipelineUpdateWithoutWorkspaceInput, PipelineUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<PipelineCreateWithoutWorkspaceInput, PipelineUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type PipelineUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: PipelineWhereUniqueInput
+    data: XOR<PipelineUpdateWithoutWorkspaceInput, PipelineUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type PipelineUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: PipelineScalarWhereInput
+    data: XOR<PipelineUpdateManyMutationInput, PipelineUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type PipelineScalarWhereInput = {
+    AND?: PipelineScalarWhereInput | PipelineScalarWhereInput[]
+    OR?: PipelineScalarWhereInput[]
+    NOT?: PipelineScalarWhereInput | PipelineScalarWhereInput[]
+    id?: StringFilter<"Pipeline"> | string
+    organizationId?: StringFilter<"Pipeline"> | string
+    workspaceId?: StringFilter<"Pipeline"> | string
+    airbyteConnectionId?: StringFilter<"Pipeline"> | string
+    status?: EnumPipelineStatusFilter<"Pipeline"> | $Enums.PipelineStatus
+    lastSync?: DateTimeNullableFilter<"Pipeline"> | Date | string | null
+    createdAt?: DateTimeFilter<"Pipeline"> | Date | string
+    updatedAt?: DateTimeFilter<"Pipeline"> | Date | string
+  }
+
   export type ConnectionCreateWithoutIntegrationInput = {
     id?: string
     name: string
@@ -10017,6 +12144,8 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     owner: UserCreateNestedOneWithoutWorkspacesInput
+    organizations?: OrganizationCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutConnectionsInput = {
@@ -10024,6 +12153,8 @@ export namespace Prisma {
     name: string
     ownerUserId: string
     createdAt?: Date | string
+    organizations?: OrganizationUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutConnectionsInput = {
@@ -10036,6 +12167,7 @@ export namespace Prisma {
     name: string
     authType: string
     airbyteSourceDefinitionId: string
+    createdAt?: Date | string
   }
 
   export type IntegrationUncheckedCreateWithoutConnectionsInput = {
@@ -10043,6 +12175,7 @@ export namespace Prisma {
     name: string
     authType: string
     airbyteSourceDefinitionId: string
+    createdAt?: Date | string
   }
 
   export type IntegrationCreateOrConnectWithoutConnectionsInput = {
@@ -10055,14 +12188,18 @@ export namespace Prisma {
     externalOrgId: string
     name: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutOrganizationsInput
     pipelines?: PipelineCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutConnectionInput = {
     id?: string
+    workspaceId: string
     externalOrgId: string
     name: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
     pipelines?: PipelineUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -10092,6 +12229,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutWorkspacesNestedInput
+    organizations?: OrganizationUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutConnectionsInput = {
@@ -10099,6 +12238,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     ownerUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organizations?: OrganizationUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type IntegrationUpsertWithoutConnectionsInput = {
@@ -10117,6 +12258,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     authType?: StringFieldUpdateOperationsInput | string
     airbyteSourceDefinitionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntegrationUncheckedUpdateWithoutConnectionsInput = {
@@ -10124,6 +12266,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     authType?: StringFieldUpdateOperationsInput | string
     airbyteSourceDefinitionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrganizationUpsertWithWhereUniqueWithoutConnectionInput = {
@@ -10140,17 +12283,6 @@ export namespace Prisma {
   export type OrganizationUpdateManyWithWhereWithoutConnectionInput = {
     where: OrganizationScalarWhereInput
     data: XOR<OrganizationUpdateManyMutationInput, OrganizationUncheckedUpdateManyWithoutConnectionInput>
-  }
-
-  export type OrganizationScalarWhereInput = {
-    AND?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
-    OR?: OrganizationScalarWhereInput[]
-    NOT?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
-    id?: StringFilter<"Organization"> | string
-    connectionId?: StringFilter<"Organization"> | string
-    externalOrgId?: StringFilter<"Organization"> | string
-    name?: StringFilter<"Organization"> | string
-    metadata?: JsonNullableFilter<"Organization">
   }
 
   export type ConnectionCreateWithoutOrganizationsInput = {
@@ -10182,20 +12314,49 @@ export namespace Prisma {
     create: XOR<ConnectionCreateWithoutOrganizationsInput, ConnectionUncheckedCreateWithoutOrganizationsInput>
   }
 
+  export type WorkspaceCreateWithoutOrganizationsInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    owner: UserCreateNestedOneWithoutWorkspacesInput
+    connections?: ConnectionCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutOrganizationsInput = {
+    id?: string
+    name: string
+    ownerUserId: string
+    createdAt?: Date | string
+    connections?: ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutOrganizationsInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutOrganizationsInput, WorkspaceUncheckedCreateWithoutOrganizationsInput>
+  }
+
   export type PipelineCreateWithoutOrganizationInput = {
     id?: string
     airbyteConnectionId: string
-    status: string
+    status: $Enums.PipelineStatus
     lastSync?: Date | string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutPipelinesInput
+    runs?: PipelineRunCreateNestedManyWithoutPipelineInput
   }
 
   export type PipelineUncheckedCreateWithoutOrganizationInput = {
     id?: string
+    workspaceId: string
     airbyteConnectionId: string
-    status: string
+    status: $Enums.PipelineStatus
     lastSync?: Date | string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    runs?: PipelineRunUncheckedCreateNestedManyWithoutPipelineInput
   }
 
   export type PipelineCreateOrConnectWithoutOrganizationInput = {
@@ -10243,6 +12404,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type WorkspaceUpsertWithoutOrganizationsInput = {
+    update: XOR<WorkspaceUpdateWithoutOrganizationsInput, WorkspaceUncheckedUpdateWithoutOrganizationsInput>
+    create: XOR<WorkspaceCreateWithoutOrganizationsInput, WorkspaceUncheckedCreateWithoutOrganizationsInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutOrganizationsInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutOrganizationsInput, WorkspaceUncheckedUpdateWithoutOrganizationsInput>
+  }
+
+  export type WorkspaceUpdateWithoutOrganizationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutWorkspacesNestedInput
+    connections?: ConnectionUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutOrganizationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    ownerUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    connections?: ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
   export type PipelineUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: PipelineWhereUniqueInput
     update: XOR<PipelineUpdateWithoutOrganizationInput, PipelineUncheckedUpdateWithoutOrganizationInput>
@@ -10259,37 +12449,80 @@ export namespace Prisma {
     data: XOR<PipelineUpdateManyMutationInput, PipelineUncheckedUpdateManyWithoutOrganizationInput>
   }
 
-  export type PipelineScalarWhereInput = {
-    AND?: PipelineScalarWhereInput | PipelineScalarWhereInput[]
-    OR?: PipelineScalarWhereInput[]
-    NOT?: PipelineScalarWhereInput | PipelineScalarWhereInput[]
-    id?: StringFilter<"Pipeline"> | string
-    organizationId?: StringFilter<"Pipeline"> | string
-    airbyteConnectionId?: StringFilter<"Pipeline"> | string
-    status?: StringFilter<"Pipeline"> | string
-    lastSync?: DateTimeNullableFilter<"Pipeline"> | Date | string | null
-    createdAt?: DateTimeFilter<"Pipeline"> | Date | string
-  }
-
   export type OrganizationCreateWithoutPipelinesInput = {
     id?: string
     externalOrgId: string
     name: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
     connection: ConnectionCreateNestedOneWithoutOrganizationsInput
+    workspace: WorkspaceCreateNestedOneWithoutOrganizationsInput
   }
 
   export type OrganizationUncheckedCreateWithoutPipelinesInput = {
     id?: string
     connectionId: string
+    workspaceId: string
     externalOrgId: string
     name: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
   }
 
   export type OrganizationCreateOrConnectWithoutPipelinesInput = {
     where: OrganizationWhereUniqueInput
     create: XOR<OrganizationCreateWithoutPipelinesInput, OrganizationUncheckedCreateWithoutPipelinesInput>
+  }
+
+  export type WorkspaceCreateWithoutPipelinesInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    owner: UserCreateNestedOneWithoutWorkspacesInput
+    connections?: ConnectionCreateNestedManyWithoutWorkspaceInput
+    organizations?: OrganizationCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutPipelinesInput = {
+    id?: string
+    name: string
+    ownerUserId: string
+    createdAt?: Date | string
+    connections?: ConnectionUncheckedCreateNestedManyWithoutWorkspaceInput
+    organizations?: OrganizationUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutPipelinesInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutPipelinesInput, WorkspaceUncheckedCreateWithoutPipelinesInput>
+  }
+
+  export type PipelineRunCreateWithoutPipelineInput = {
+    id?: string
+    status: $Enums.PipelineRunStatus
+    startedAt: Date | string
+    finishedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PipelineRunUncheckedCreateWithoutPipelineInput = {
+    id?: string
+    status: $Enums.PipelineRunStatus
+    startedAt: Date | string
+    finishedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PipelineRunCreateOrConnectWithoutPipelineInput = {
+    where: PipelineRunWhereUniqueInput
+    create: XOR<PipelineRunCreateWithoutPipelineInput, PipelineRunUncheckedCreateWithoutPipelineInput>
+  }
+
+  export type PipelineRunCreateManyPipelineInputEnvelope = {
+    data: PipelineRunCreateManyPipelineInput | PipelineRunCreateManyPipelineInput[]
+    skipDuplicates?: boolean
   }
 
   export type OrganizationUpsertWithoutPipelinesInput = {
@@ -10308,15 +12541,137 @@ export namespace Prisma {
     externalOrgId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connection?: ConnectionUpdateOneRequiredWithoutOrganizationsNestedInput
+    workspace?: WorkspaceUpdateOneRequiredWithoutOrganizationsNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutPipelinesInput = {
     id?: StringFieldUpdateOperationsInput | string
     connectionId?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
     externalOrgId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceUpsertWithoutPipelinesInput = {
+    update: XOR<WorkspaceUpdateWithoutPipelinesInput, WorkspaceUncheckedUpdateWithoutPipelinesInput>
+    create: XOR<WorkspaceCreateWithoutPipelinesInput, WorkspaceUncheckedCreateWithoutPipelinesInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutPipelinesInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutPipelinesInput, WorkspaceUncheckedUpdateWithoutPipelinesInput>
+  }
+
+  export type WorkspaceUpdateWithoutPipelinesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutWorkspacesNestedInput
+    connections?: ConnectionUpdateManyWithoutWorkspaceNestedInput
+    organizations?: OrganizationUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutPipelinesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    ownerUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    connections?: ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+    organizations?: OrganizationUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type PipelineRunUpsertWithWhereUniqueWithoutPipelineInput = {
+    where: PipelineRunWhereUniqueInput
+    update: XOR<PipelineRunUpdateWithoutPipelineInput, PipelineRunUncheckedUpdateWithoutPipelineInput>
+    create: XOR<PipelineRunCreateWithoutPipelineInput, PipelineRunUncheckedCreateWithoutPipelineInput>
+  }
+
+  export type PipelineRunUpdateWithWhereUniqueWithoutPipelineInput = {
+    where: PipelineRunWhereUniqueInput
+    data: XOR<PipelineRunUpdateWithoutPipelineInput, PipelineRunUncheckedUpdateWithoutPipelineInput>
+  }
+
+  export type PipelineRunUpdateManyWithWhereWithoutPipelineInput = {
+    where: PipelineRunScalarWhereInput
+    data: XOR<PipelineRunUpdateManyMutationInput, PipelineRunUncheckedUpdateManyWithoutPipelineInput>
+  }
+
+  export type PipelineRunScalarWhereInput = {
+    AND?: PipelineRunScalarWhereInput | PipelineRunScalarWhereInput[]
+    OR?: PipelineRunScalarWhereInput[]
+    NOT?: PipelineRunScalarWhereInput | PipelineRunScalarWhereInput[]
+    id?: StringFilter<"PipelineRun"> | string
+    pipelineId?: StringFilter<"PipelineRun"> | string
+    status?: EnumPipelineRunStatusFilter<"PipelineRun"> | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFilter<"PipelineRun"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"PipelineRun"> | Date | string | null
+    error?: StringNullableFilter<"PipelineRun"> | string | null
+    createdAt?: DateTimeFilter<"PipelineRun"> | Date | string
+  }
+
+  export type PipelineCreateWithoutRunsInput = {
+    id?: string
+    airbyteConnectionId: string
+    status: $Enums.PipelineStatus
+    lastSync?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutPipelinesInput
+    workspace: WorkspaceCreateNestedOneWithoutPipelinesInput
+  }
+
+  export type PipelineUncheckedCreateWithoutRunsInput = {
+    id?: string
+    organizationId: string
+    workspaceId: string
+    airbyteConnectionId: string
+    status: $Enums.PipelineStatus
+    lastSync?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelineCreateOrConnectWithoutRunsInput = {
+    where: PipelineWhereUniqueInput
+    create: XOR<PipelineCreateWithoutRunsInput, PipelineUncheckedCreateWithoutRunsInput>
+  }
+
+  export type PipelineUpsertWithoutRunsInput = {
+    update: XOR<PipelineUpdateWithoutRunsInput, PipelineUncheckedUpdateWithoutRunsInput>
+    create: XOR<PipelineCreateWithoutRunsInput, PipelineUncheckedCreateWithoutRunsInput>
+    where?: PipelineWhereInput
+  }
+
+  export type PipelineUpdateToOneWithWhereWithoutRunsInput = {
+    where?: PipelineWhereInput
+    data: XOR<PipelineUpdateWithoutRunsInput, PipelineUncheckedUpdateWithoutRunsInput>
+  }
+
+  export type PipelineUpdateWithoutRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    airbyteConnectionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
+    lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutPipelinesNestedInput
+    workspace?: WorkspaceUpdateOneRequiredWithoutPipelinesNestedInput
+  }
+
+  export type PipelineUncheckedUpdateWithoutRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    airbyteConnectionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
+    lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkspaceCreateManyOwnerInput = {
@@ -10330,6 +12685,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connections?: ConnectionUpdateManyWithoutWorkspaceNestedInput
+    organizations?: OrganizationUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutOwnerInput = {
@@ -10337,6 +12694,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connections?: ConnectionUncheckedUpdateManyWithoutWorkspaceNestedInput
+    organizations?: OrganizationUncheckedUpdateManyWithoutWorkspaceNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateManyWithoutOwnerInput = {
@@ -10352,6 +12711,25 @@ export namespace Prisma {
     accessToken: string
     refreshToken?: string | null
     expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OrganizationCreateManyWorkspaceInput = {
+    id?: string
+    connectionId: string
+    externalOrgId: string
+    name: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type PipelineCreateManyWorkspaceInput = {
+    id?: string
+    organizationId: string
+    airbyteConnectionId: string
+    status: $Enums.PipelineStatus
+    lastSync?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10387,6 +12765,67 @@ export namespace Prisma {
     accessToken?: StringFieldUpdateOperationsInput | string
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrganizationUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalOrgId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    connection?: ConnectionUpdateOneRequiredWithoutOrganizationsNestedInput
+    pipelines?: PipelineUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    connectionId?: StringFieldUpdateOperationsInput | string
+    externalOrgId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pipelines?: PipelineUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    connectionId?: StringFieldUpdateOperationsInput | string
+    externalOrgId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    airbyteConnectionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
+    lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutPipelinesNestedInput
+    runs?: PipelineRunUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type PipelineUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    airbyteConnectionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
+    lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runs?: PipelineRunUncheckedUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type PipelineUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    airbyteConnectionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
+    lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10439,9 +12878,11 @@ export namespace Prisma {
 
   export type OrganizationCreateManyConnectionInput = {
     id?: string
+    workspaceId: string
     externalOrgId: string
     name: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
   }
 
   export type OrganizationUpdateWithoutConnectionInput = {
@@ -10449,53 +12890,105 @@ export namespace Prisma {
     externalOrgId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutOrganizationsNestedInput
     pipelines?: PipelineUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutConnectionInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
     externalOrgId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pipelines?: PipelineUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateManyWithoutConnectionInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
     externalOrgId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PipelineCreateManyOrganizationInput = {
     id?: string
+    workspaceId: string
     airbyteConnectionId: string
-    status: string
+    status: $Enums.PipelineStatus
     lastSync?: Date | string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PipelineUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     airbyteConnectionId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
     lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutPipelinesNestedInput
+    runs?: PipelineRunUpdateManyWithoutPipelineNestedInput
   }
 
   export type PipelineUncheckedUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
     airbyteConnectionId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
     lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runs?: PipelineRunUncheckedUpdateManyWithoutPipelineNestedInput
   }
 
   export type PipelineUncheckedUpdateManyWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
     airbyteConnectionId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineStatusFieldUpdateOperationsInput | $Enums.PipelineStatus
     lastSync?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineRunCreateManyPipelineInput = {
+    id?: string
+    status: $Enums.PipelineRunStatus
+    startedAt: Date | string
+    finishedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PipelineRunUpdateWithoutPipelineInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineRunStatusFieldUpdateOperationsInput | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineRunUncheckedUpdateWithoutPipelineInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineRunStatusFieldUpdateOperationsInput | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineRunUncheckedUpdateManyWithoutPipelineInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumPipelineRunStatusFieldUpdateOperationsInput | $Enums.PipelineRunStatus
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
